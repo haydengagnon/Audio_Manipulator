@@ -4,6 +4,7 @@ from audio_dsp.effects import (
     bitcrush_distortion,
     chebyshev_fold_distortion,
     filter,
+    vocoder,
 )
 import PySimpleGUI as sg
 import os
@@ -32,6 +33,7 @@ file_select = [
     [
         sg.Column(layouts.distortion_layout, key="-DISTORTION_LAYOUT-", visible=False),
         sg.Column(layouts.resonance_layout, key="-RESONANCE_LAYOUT-", visible=False),
+        sg.Column(layouts.vocoder_layout, key="-VOCODER_LAYOUT-", visible=False),
     ],
 ]
 
@@ -68,12 +70,15 @@ while True:
         elif modifier_type == "Resonance":
             window["-RESONANCE_LAYOUT-"].update(visible=True)
         elif modifier_type =="Vocoder":
-            pass  # Implement vocoder functionality here
+            window["-VOCODER_LAYOUT-"].update(visible=True)
         
         if modifier_type != "Distortion":
             window["-DISTORTION_LAYOUT-"].update(visible=False)
         if modifier_type != "Resonance":
             window["-RESONANCE_LAYOUT-"].update(visible=False)
+        if modifier_type != "Vocoder":
+            window["-VOCODER_LAYOUT-"].update(visible=False)
+            
     elif event == "-PREVIEW_DISTORTION-":
         try:
             distortion_type = values["-DISTORTION_TYPE-"]
@@ -107,7 +112,18 @@ while True:
             os.remove("temp.mp3")
         except:
             file = None
-    elif event == sg.WIN_CLOSED:
-        break
+    elif event == "-PREVIEW_VOCODER-":
+        try:
+            carrier_type = values["-CARRIER_TYPE_VOCODER"],
+            number_of_bands = values["-NUM_BANDS_VOCODER"],
+            frequency_range_low = values["-FREQUENCY_RANGE_LOW_VOCODER"],
+            frequency_range_high = values["-FREQUENCY_RANGE_HIGH_VOCODER"],
+            carrier_frequency = values["-CARRIER_FREQUENCY_VOCODER"],
+            vocoded_audio, sr= vocoder(carrier=None, modulator=audio, n_filters=number_of_bands, freq_range=(frequency_range_low, frequency_range_high), carrier_type=carrier_type)
+            sf.write("temp.mp3", vocoded_audio, sr)
+            ps.playsound("temp.mp3")
+            os.remove("temp.mp3")
+        except:
+            file = None
                 
 window.close()
