@@ -103,7 +103,44 @@ vocoder_layout = [
             size=(20, 15),
             key="-NUM_BANDS_VOCODER-",
         )
-    ]
+    ],
+    [
+        sg.Text("Frequency Range Low"),
+        sg.Slider(
+            range=(0, 20000),
+            default_value=20,
+            resolution=1,
+            orientation="h",
+            size=(20, 15),
+            key="-FREQUENCY_RANGE_LOW_VOCODER-",
+        ),
+    ],
+    [
+        sg.Text("Frequency Range High"),
+        sg.Slider(
+            range=(0, 20000),
+            default_value=10000,
+            resolution=1,
+            orientation="h",
+            size=(20, 15),
+            key="-FREQUENCY_RANGE_HIGH_VOCODER-",
+        ),
+    ],
+    [
+        sg.Text("Carrier Frequency"),
+        sg.Slider(
+            range=(0, 20000),
+            default_value=100,
+            resolution=1,
+            orientation="h",
+            size=(20, 15),
+            key="-CARRIER_FREQUENCY_VOCODER-",
+        ),
+    ],
+    [
+        sg.Button("Preview", key="-PREVIEW_VOCODER-"),
+    ],
+    
 ]
 
 phaser_layout = [
