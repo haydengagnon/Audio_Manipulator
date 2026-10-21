@@ -88,16 +88,16 @@ vocoder_layout = [
     [
         sg.Text("Carrier Type"),
         sg.Combo(
-            ["Noise", "Sawtooth"],
-            default_value="Noise",
-            key="-CARRIER_TYPE_VOCODER"
+            ["sawtooth", "noise"],
+            default_value="sawtooth",
+            key="-CARRIER_TYPE_VOCODER-"
         ),
     ],
     [
         sg.Text("Number of Bands"),
         sg.Slider(
             range=(1, 48),
-            default_value=16,
+            default_value=48,
             resolution=1,
             orientation="h",
             size=(20, 15),
@@ -108,7 +108,7 @@ vocoder_layout = [
         sg.Text("Frequency Range Low"),
         sg.Slider(
             range=(0, 20000),
-            default_value=20,
+            default_value=80,
             resolution=1,
             orientation="h",
             size=(20, 15),
@@ -119,7 +119,7 @@ vocoder_layout = [
         sg.Text("Frequency Range High"),
         sg.Slider(
             range=(0, 20000),
-            default_value=10000,
+            default_value=8000,
             resolution=1,
             orientation="h",
             size=(20, 15),
@@ -130,7 +130,7 @@ vocoder_layout = [
         sg.Text("Carrier Frequency"),
         sg.Slider(
             range=(0, 20000),
-            default_value=100,
+            default_value=110,
             resolution=1,
             orientation="h",
             size=(20, 15),
