@@ -132,11 +132,10 @@ while True:
         try:
             sf.write("temp.wav", audio, sr)
             carrier_type = values["-CARRIER_TYPE_VOCODER-"]
-            number_of_bands = values["-NUM_BANDS_VOCODER-"]
-            frequency_range_low = values["-FREQUENCY_RANGE_LOW_VOCODER-"]
-            frequency_range_high = values["-FREQUENCY_RANGE_HIGH_VOCODER-"]
+            number_of_bands = int(values["-NUM_BANDS_VOCODER-"])
+            frequency_range_low = int(values["-FREQUENCY_RANGE_LOW_VOCODER-"])
+            frequency_range_high = int(values["-FREQUENCY_RANGE_HIGH_VOCODER-"])
             carrier_frequency = values["-CARRIER_FREQUENCY_VOCODER-"]
-            #output, sr = vocoder(carrier=None, modulator="temp.wav", carrier_type="sawtooth", carrier_freq=110, n_filters=48, freq_range=(80,8000))
             output, sr = vocoder(carrier=None, modulator="temp.wav", carrier_type=carrier_type, carrier_freq=carrier_frequency, n_filters=number_of_bands, freq_range=(frequency_range_low, frequency_range_high))
             sf.write("temp.mp3", output, sr)
             ps.playsound("temp.mp3")

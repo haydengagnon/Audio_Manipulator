@@ -107,7 +107,7 @@ vocoder_layout = [
     [
         sg.Text("Frequency Range Low"),
         sg.Slider(
-            range=(0, 20000),
+            range=(0, 8000),
             default_value=80,
             resolution=1,
             orientation="h",
@@ -118,7 +118,7 @@ vocoder_layout = [
     [
         sg.Text("Frequency Range High"),
         sg.Slider(
-            range=(0, 20000),
+            range=(0, 8000),
             default_value=8000,
             resolution=1,
             orientation="h",
@@ -129,7 +129,7 @@ vocoder_layout = [
     [
         sg.Text("Carrier Frequency"),
         sg.Slider(
-            range=(0, 20000),
+            range=(0, 8000),
             default_value=110,
             resolution=1,
             orientation="h",
