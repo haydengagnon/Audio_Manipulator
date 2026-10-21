@@ -88,22 +88,59 @@ vocoder_layout = [
     [
         sg.Text("Carrier Type"),
         sg.Combo(
-            ["Noise", "Sawtooth"],
-            default_value="Noise",
-            key="-CARRIER_TYPE_VOCODER"
+            ["sawtooth", "noise"],
+            default_value="sawtooth",
+            key="-CARRIER_TYPE_VOCODER-"
         ),
     ],
     [
         sg.Text("Number of Bands"),
         sg.Slider(
             range=(1, 48),
-            default_value=16,
+            default_value=48,
             resolution=1,
             orientation="h",
             size=(20, 15),
             key="-NUM_BANDS_VOCODER-",
         )
-    ]
+    ],
+    [
+        sg.Text("Frequency Range Low"),
+        sg.Slider(
+            range=(0, 8000),
+            default_value=80,
+            resolution=1,
+            orientation="h",
+            size=(20, 15),
+            key="-FREQUENCY_RANGE_LOW_VOCODER-",
+        ),
+    ],
+    [
+        sg.Text("Frequency Range High"),
+        sg.Slider(
+            range=(0, 8000),
+            default_value=8000,
+            resolution=1,
+            orientation="h",
+            size=(20, 15),
+            key="-FREQUENCY_RANGE_HIGH_VOCODER-",
+        ),
+    ],
+    [
+        sg.Text("Carrier Frequency"),
+        sg.Slider(
+            range=(0, 8000),
+            default_value=110,
+            resolution=1,
+            orientation="h",
+            size=(20, 15),
+            key="-CARRIER_FREQUENCY_VOCODER-",
+        ),
+    ],
+    [
+        sg.Button("Preview", key="-PREVIEW_VOCODER-"),
+    ],
+    
 ]
 
 phaser_layout = [
