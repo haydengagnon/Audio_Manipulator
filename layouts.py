@@ -33,6 +33,7 @@ distortion_layout = [
     ],
     [
         sg.Button("Preview", key="-PREVIEW_DISTORTION-"),
+        sg.Button("Save", key="-SAVE_DISTORTION-"),
     ],
 ]
 
@@ -81,6 +82,7 @@ resonance_layout = [
     ],
     [
         sg.Button("Preview", key="-PREVIEW_RESONANCE-"),
+        sg.Button("Save", key="-SAVE_RESONANCE-"),
     ],
 ]
 
@@ -139,14 +141,72 @@ vocoder_layout = [
     ],
     [
         sg.Button("Preview", key="-PREVIEW_VOCODER-"),
+        sg.Button("Save", key="-SAVE_VOCODER-"),
     ],
     
 ]
 
 phaser_layout = [
     [
-        
+        sg.Text("Phaser Rate"),
+        sg.Slider(
+            range=(0.0,1.0),
+            default_value=0.5,
+            resolution=0.1,
+            orientation="h",
+            size=(20,15),
+            key="-PHASER_RATE-",
+        ),
+    ],
+    [
+        sg.Text("Phaser Depth"),
+        sg.Slider(
+            range=(0.0,1.0),
+            default_value=0.8,
+            resolution=0.1,
+            orientation="h",
+            size=(20,15),
+            key="-PHASER_DEPTH-",
+        ),
+    ],
+    [
+        sg.Text("Phaser Stages"),
+        sg.Slider(
+            range=(1,12),
+            default_value=4,
+            resolution=1,
+            orientation="h",
+            size=(20,15),
+            key="-PHASER_STAGES-",
+        ),
+    ],
+    [
+        sg.Text("Phaser Mix"),
+        sg.Slider(
+            range=(0.0,1.0),
+            default_value=0.7,
+            resolution=0.1,
+            orientation="h",
+            size=(20,15),
+            key="-PHASER_MIX",
+        ),
+    ],
+    [
+        sg.Text("Wet Mix"),
+        sg.Slider(
+            range=(0.0,1.0),
+            default_value=0.7,
+            resolution=0.1,
+            orientation="h",
+            size=(20,15),
+            key="-PHASER_WET_MIX-",
+        ),
+    ],
+    [
+        sg.Button("Preview", key="-PHASER_PREVIEW-"),
+        sg.Button("Save", key="-PHASER_SAVE-"),
     ]
+    
 ]
 
 flanger_layout = [
@@ -185,3 +245,25 @@ negative_audio_layout = [
     ]
 ]
 
+file_select = [
+    [
+        sg.Text("Audio File"),
+        sg.In(size=(25, 1), enable_events=True, key="-FILE-"),
+        sg.FileBrowse(file_types=(("Audio Files", "*.wav;*.mp3"),)),
+        sg.Button("Play", key="-PLAY-"),
+    ],
+    [
+      sg.Text("Modifier Type"),
+      sg.Combo(
+            ["Distortion", "Resonance", "Vocoder", "Phaser", "Flanger", "Chorus", "Delay", "Glitch", "Multi-Band Saturation", "Negative Audio", "Sidechain", "Compressor"],
+            enable_events=True,
+            key="-MODIFIER_TYPE-",
+      )  
+    ],
+    [
+        sg.Column(distortion_layout, key="-DISTORTION_LAYOUT-", visible=False),
+        sg.Column(resonance_layout, key="-RESONANCE_LAYOUT-", visible=False),
+        sg.Column(vocoder_layout, key="-VOCODER_LAYOUT-", visible=False),
+        sg.Column(phaser_layout, key="-PHASER_LAYOUT-", visible=False),
+    ],
+]
