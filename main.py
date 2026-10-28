@@ -21,33 +21,9 @@ from pydub import AudioSegment
 
 sg.theme("DarkGrey11")
 
-file_select = [
-    [
-        sg.Text("Audio File"),
-        sg.In(size=(25, 1), enable_events=True, key="-FILE-"),
-        sg.FileBrowse(file_types=(("Audio Files", "*.wav;*.mp3"),)),
-        sg.Button("Play", key="-PLAY-"),
-    ],
-    [
-      sg.Text("Modifier Type"),
-      sg.Combo(
-            ["Distortion", "Resonance", "Vocoder", "Phaser", "Flanger", "Chorus", "Delay", "Glitch", "Multi-Band Saturation", "Negative Audio", "Sidechain", "Compressor"],
-            enable_events=True,
-            key="-MODIFIER_TYPE-",
-      )  
-    ],
-    [
-        sg.Column(layouts.distortion_layout, key="-DISTORTION_LAYOUT-", visible=False),
-        sg.Column(layouts.resonance_layout, key="-RESONANCE_LAYOUT-", visible=False),
-        sg.Column(layouts.vocoder_layout, key="-VOCODER_LAYOUT-", visible=False),
-    ],
-]
-
-
-
 layout = [
     [
-        sg.Column(file_select),
+        sg.Column(layouts.file_select),
     ]
 ]
 
@@ -79,8 +55,10 @@ while True:
             window["-DISTORTION_LAYOUT-"].update(visible=True)
         elif modifier_type == "Resonance":
             window["-RESONANCE_LAYOUT-"].update(visible=True)
-        elif modifier_type =="Vocoder":
+        elif modifier_type == "Vocoder":
             window["-VOCODER_LAYOUT-"].update(visible=True)
+        elif modifier_type == "Phaser":
+            window["-PHASER_LAYOUT-"].update(visible=True)
         
         if modifier_type != "Distortion":
             window["-DISTORTION_LAYOUT-"].update(visible=False)
@@ -88,6 +66,8 @@ while True:
             window["-RESONANCE_LAYOUT-"].update(visible=False)
         if modifier_type != "Vocoder":
             window["-VOCODER_LAYOUT-"].update(visible=False)
+        if modifier_type != "Phaser":
+            window["-PHASER_LAYOUT-"].update(visible=False)
             
     elif event == "-PREVIEW_DISTORTION-":
         try:
