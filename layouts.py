@@ -140,8 +140,13 @@ vocoder_layout = [
         ),
     ],
     [
-        sg.Button("Preview", key="-PREVIEW_VOCODER-"),
-        sg.Button("Save", key="-SAVE_VOCODER-"),
+        sg.Button("Preview", key="-VOCODER_PREVIEW-"),
+        sg.In(size=(25, 1), enable_events=True, key="-VOCODER_FOLDER_SELECT-"),
+        sg.FolderBrowse(button_text="Select Save Folder"),
+    ],
+    [
+        sg.Button("Save", key="-VOCODER_SAVE-"),
+        sg.In(size=(15,1), enable_events=True, key="-VOCODER_FILENAME-", placeholder="Filename"),
     ],
     
 ]
@@ -188,24 +193,18 @@ phaser_layout = [
             resolution=0.1,
             orientation="h",
             size=(20,15),
-            key="-PHASER_MIX",
-        ),
-    ],
-    [
-        sg.Text("Wet Mix"),
-        sg.Slider(
-            range=(0.0,1.0),
-            default_value=0.7,
-            resolution=0.1,
-            orientation="h",
-            size=(20,15),
-            key="-PHASER_WET_MIX-",
+            key="-PHASER_MIX-",
         ),
     ],
     [
         sg.Button("Preview", key="-PHASER_PREVIEW-"),
+        sg.In(size=(25, 1), enable_events=True, key="-PHASER_FOLDER_SELECT-", placeholder="Select Folder"),
+        sg.FolderBrowse(button_text="Select Save Folder"),
+    ],
+    [
         sg.Button("Save", key="-PHASER_SAVE-"),
-    ]
+        sg.In(size=(15,1), enable_events=True, key="-PHASER_FILENAME-", placeholder="Filename"),
+    ],
     
 ]
 
