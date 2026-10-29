@@ -33,8 +33,13 @@ distortion_layout = [
     ],
     [
         sg.Button("Preview", key="-PREVIEW_DISTORTION-"),
-        sg.Button("Save", key="-SAVE_DISTORTION-"),
+        sg.In(size=(25,15), enable_events=True, key="-DISTORTION_SAVE_FOLDER-"),
+        sg.FolderBrowse(button_text="Select Save Folder"),
     ],
+    [
+        sg.Button("Save", key="-SAVE_DISTORTION-"),
+        sg.In(size=(15,1), enable_events=True, key="-DISTORTION_FILENAME-", placeholder="Filename"),
+    ]
 ]
 
 resonance_layout = [
@@ -82,7 +87,13 @@ resonance_layout = [
     ],
     [
         sg.Button("Preview", key="-PREVIEW_RESONANCE-"),
+        sg.In(size=(25,15), enable_events=True, key="-RESONANCE_FOLDER_SELECT-"),
+        sg.FolderBrowse(button_text="Select Save Folder"),
+
+    ],
+    [
         sg.Button("Save", key="-SAVE_RESONANCE-"),
+        sg.In(size=(15,1), enable_events=True, key="-RESONANCE_FILENAME-", placeholder="Filename"),
     ],
 ]
 

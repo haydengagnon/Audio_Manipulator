@@ -86,9 +86,26 @@ while True:
             try:
                 os.remove("temp.mp3")
             except:
-                file = None
+                pass
     elif event == "-SAVE_DISTORTION-":
-        pass
+        try:
+            distortion_save_folder = values["-DISTORTION_SAVE_FOLDER-"]
+            distortion_filename = values["-DISTORTION_FILENAME-"]
+            distortion_type = values["-DISTORTION_TYPE-"]
+            gain = values["-GAIN_DISTORTION-"]
+            mix = values["-MIX_DISTORTION-"]
+            if distortion_type == "Fuzz":
+                distorted_audio = fuzz_distortion(audio, gain=gain, threshold=0.2, mix=mix)
+            if distortion_type == "Wavefold":
+                distorted_audio = wavefold_distortion(audio, gain=gain, mix=mix)
+            if distortion_type == "Bitcrush":
+                distorted_audio = bitcrush_distortion(audio, bits=6, mix=mix)
+            if distortion_type == "Chebyshev":
+                distorted_audio = chebyshev_fold_distortion(audio, gain=gain, n=3, mix=mix)
+            sf.write("distorted.mp3", distorted_audio, sr)
+            shutil.move("distorted.mp3", distortion_save_folder + "/" + distortion_filename + ".mp3")
+        except:
+            pass
 
     elif event == "-PREVIEW_RESONANCE-":
         try:
@@ -107,9 +124,23 @@ while True:
             try:
                 os.remove("temp.mp3")
             except:
-                file = None
+                pass
     elif event == "-SAVE_RESONANCE-":
-        pass
+        try:
+            resonance_save_folder = values["-RESONANCE_FOLDER_SELECT-"]
+            resonance_filename = values["-RESONANCE_FILENAME-"]
+            filter_type = values["-FILTER_TYPE_RESONANCE-"]
+            cutoff_frequency = values["-CUTOFF_FREQUENCY_RESONANCE-"]
+            resonance = values["-RESONANCE-"]
+            qfactor = values["-QFACTOR_RESONANCE-"]
+            if filter_type == "Lowpass":
+                resonated_audio = filter(audio, sample_rate=sr, cutoff=cutoff_frequency, resonance=resonance, q=qfactor, filter_type="lowpass")
+            elif filter_type == "Bandpass":
+                resonated_audio = filter(audio, sample_rate=sr, cutoff=cutoff_frequency, resonance=resonance, q=qfactor, filter_type="bandpass")
+            sf.write("resonated.mp3", resonated_audio, sr)
+            shutil.move("resonated.mp3", resonance_save_folder + "/" + resonance_filename + ".mp3")
+        except:
+            pass
 
     elif event == "-VOCODER_PREVIEW-":
         try:
@@ -129,7 +160,7 @@ while True:
                 os.remove("temp.wav")
                 os.remove("temp.mp3")
             except:
-                file = None
+                pass
     elif event == "-VOCODER_SAVE-":
         try:
             sf.write("temp.wav", audio, sr)
@@ -162,7 +193,7 @@ while True:
             try:
                 os.remove("temp.mp3")
             except:
-                file = None
+                pass
         
     elif event == "-PHASER_SAVE-":
         try:
@@ -176,6 +207,6 @@ while True:
             sf.write("phased.mp3", phased, sr)
             shutil.move("phased.mp3", phaser_save_folder + "/" + phaser_file_name + ".mp3")
         except:
-            file = None
+            pass
 
 window.close()
