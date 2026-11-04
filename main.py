@@ -83,6 +83,7 @@ while True:
             ps.playsound("temp.mp3")
             os.remove("temp.mp3")
         except:
+            sg.popup("Error previewing sound.")
             try:
                 os.remove("temp.mp3")
             except:
@@ -105,7 +106,11 @@ while True:
             sf.write("distorted.mp3", distorted_audio, sr)
             shutil.move("distorted.mp3", distortion_save_folder + "/" + distortion_filename + ".mp3")
         except:
-            pass
+            sg.popup("Error saving file.")
+            try:
+                os.remove("distorted.mp3")
+            except:
+                pass
 
     elif event == "-PREVIEW_RESONANCE-":
         try:
@@ -121,6 +126,7 @@ while True:
             ps.playsound("temp.mp3")
             os.remove("temp.mp3")
         except:
+            sg.popup("Error previewing sound.")
             try:
                 os.remove("temp.mp3")
             except:
@@ -140,7 +146,11 @@ while True:
             sf.write("resonated.mp3", resonated_audio, sr)
             shutil.move("resonated.mp3", resonance_save_folder + "/" + resonance_filename + ".mp3")
         except:
-            pass
+            sg.popup("Error saving file.")
+            try:
+                os.remove("resonated.mp3")
+            except:
+                pass
 
     elif event == "-VOCODER_PREVIEW-":
         try:
@@ -156,6 +166,7 @@ while True:
             os.remove("temp.mp3")
             os.remove("temp.wav")
         except:
+            sg.popup("Error previewing sound.")
             try:
                 os.remove("temp.wav")
                 os.remove("temp.mp3")
@@ -176,8 +187,12 @@ while True:
             shutil.move("vocoded.mp3", vocoder_save_folder + "/" + vocoder_filename + ".mp3")
             os.remove("temp.wav")
         except:
-            os.remove("temp.wav")
-
+            sg.popup("Error saving file.")
+            try:
+                os.remove("temp.wav")
+            except:
+                pass
+            
     elif event == "-PHASER_PREVIEW-":
         try:
             phaser_rate = values["-PHASER_RATE-"]
@@ -190,6 +205,7 @@ while True:
             ps.playsound("temp.mp3")
             os.remove("temp.mp3")
         except:
+            sg.popup("Error previewing sound.")
             try:
                 os.remove("temp.mp3")
             except:
@@ -207,6 +223,10 @@ while True:
             sf.write("phased.mp3", phased, sr)
             shutil.move("phased.mp3", phaser_save_folder + "/" + phaser_file_name + ".mp3")
         except:
-            pass
+            sg.popup("Error saving file.")
+            try:
+                os.remove("phased.mpe3")
+            except:
+                pass
 
 window.close()
