@@ -221,8 +221,58 @@ phaser_layout = [
 
 flanger_layout = [
     [
-        
-    ]
+        sg.Text("Flanger Rate"),
+        sg.Slider(
+            range=(0.0,1.0),
+            default_value=0.2,
+            resolution=0.1,
+            orientation="h",
+            size=(20,15),
+            key="-FLANGER_STAGES-",
+        ),
+    ],
+    [
+        sg.Text("Flanger Delay Base"),
+        sg.Slider(
+            range=(0.0,1.0),
+            default_value=0.005,
+            resolution=0.005,
+            orientation="h",
+            size=(20,15),
+            key="-FLANGER_DELAY_BASE-"
+        ),
+    ],
+    [
+        sg.Text("Flanger Delay Depth"),
+        sg.Slider(
+            range=(0.0,1),
+            default_value=0.005,
+            resolution=0.005,
+            orientation="h",
+            size=(20,15),
+            key="-FLANGER_DELAY_DEPTH-",
+        ),
+    ],
+    [
+        sg.Text("Flanger Mix"),
+        sg.Slider(
+            range=(0.0,1.0),
+            default_value=0.7,
+            resolution=0.1,
+            orientation="h",
+            size=(20,15),
+            key="-FLANGER_MIX-",
+        ),
+    ],
+    [
+        sg.Button("Preview", key="-FLANGER_PREVIEW-"),
+        sg.In(size=(25, 1), enable_events=True, key="-FLANGER_FOLDER_SELECT-", placeholder="Select Folder"),
+        sg.FolderBrowse(button_text="Select Save Folder"),
+    ],
+    [
+        sg.Button("Save", key="-FLANGER_SAVE-"),
+        sg.In(size=(15,1), enable_events=True, key="-FLANGER_FILENAME-", placeholder="Filename"),
+    ],
 ]
 
 chorus_layout = [
@@ -275,5 +325,6 @@ file_select = [
         sg.Column(resonance_layout, key="-RESONANCE_LAYOUT-", visible=False),
         sg.Column(vocoder_layout, key="-VOCODER_LAYOUT-", visible=False),
         sg.Column(phaser_layout, key="-PHASER_LAYOUT-", visible=False),
+        sg.Column(flanger_layout, key="-FLANGER_LAYOUT-", visible=False),
     ],
 ]

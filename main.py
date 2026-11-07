@@ -56,6 +56,8 @@ while True:
             window["-VOCODER_LAYOUT-"].update(visible=True)
         elif modifier_type == "Phaser":
             window["-PHASER_LAYOUT-"].update(visible=True)
+        elif modifier_type == "Flanger":
+            window["-FLANGER_LAYOUT-"].update(visible=True)
         
         if modifier_type != "Distortion":
             window["-DISTORTION_LAYOUT-"].update(visible=False)
@@ -65,6 +67,8 @@ while True:
             window["-VOCODER_LAYOUT-"].update(visible=False)
         if modifier_type != "Phaser":
             window["-PHASER_LAYOUT-"].update(visible=False)
+        if modifier_type != "Flanger":
+            window["-FLANGER_LAYOUT-"].update(visible=False)
             
     elif event == "-PREVIEW_DISTORTION-":
         try:
@@ -209,8 +213,7 @@ while True:
             try:
                 os.remove("temp.mp3")
             except:
-                pass
-        
+                pass        
     elif event == "-PHASER_SAVE-":
         try:
             phaser_save_folder = values["-PHASER_FOLDER_SELECT-"]
@@ -228,5 +231,10 @@ while True:
                 os.remove("phased.mpe3")
             except:
                 pass
+            
+    elif event == "-FLANGER_PREVIEW-":
+        pass
+    elif event == "-FLANGER_SAVE-":
+        pass
 
 window.close()
