@@ -290,12 +290,12 @@ chorus_layout = [
     [
         sg.Text("Pitch Modulation Amount"),
         sg.Slider(
-            range=(0.0,1.0),
+            range=(1.0,4.0),
             default_value=1.0,
             resolution=0.1,
             orientation="h",
             size=(20,15),
-            key="-CHORUS_PITCH_AMOUNT-",
+            key="-CHORUS_MODULATION_AMOUNT-",
         ),
     ],
     [
@@ -318,6 +318,17 @@ chorus_layout = [
             orientation="h",
             size=(20,15),
             key="-CHORUS_NUMBEROF_CLONES-",
+        ),
+    ],
+    [
+        sg.Text("Delay"),
+        sg.Slider(
+            range=(0.0,1.0),
+            default_value=0.0,
+            resolution=0.02,
+            orientation="h",
+            size=(20,15),
+            key="-CHORUS_DELAY-",
         ),
     ],
     [

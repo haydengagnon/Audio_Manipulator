@@ -7,12 +7,12 @@ from audio_dsp.effects import (
     vocoder,
     phaser_flanger,
 )
+from audio_dsp.effects.random_chorus import chorus
 import PySimpleGUI as sg
 import os
 import soundfile as sf
 import playsound as ps
 import layouts
-import numpy as np
 import shutil
 
 
@@ -31,7 +31,11 @@ while True:
     if event == "Exit" or event == sg.WIN_CLOSED:
         try:
             os.remove("temp.wav")
-            break
+            try:
+                os.remove("temp.mp3")
+                break
+            except:
+                break
         except:
             break
 
@@ -58,6 +62,8 @@ while True:
             window["-PHASER_LAYOUT-"].update(visible=True)
         elif modifier_type == "Flanger":
             window["-FLANGER_LAYOUT-"].update(visible=True)
+        elif modifier_type == "Chorus":
+            window["-CHORUS_LAYOUT-"].update(visible=True)
         
         if modifier_type != "Distortion":
             window["-DISTORTION_LAYOUT-"].update(visible=False)
@@ -69,6 +75,8 @@ while True:
             window["-PHASER_LAYOUT-"].update(visible=False)
         if modifier_type != "Flanger":
             window["-FLANGER_LAYOUT-"].update(visible=False)
+        if modifier_type != "Chorus":
+            window["-CHORUS_LAYOUT-"].update(visible=False)
             
     elif event == "-PREVIEW_DISTORTION-":
         try:
@@ -123,9 +131,9 @@ while True:
             resonance = values["-RESONANCE-"]
             qfactor = values["-QFACTOR_RESONANCE-"]
             if filter_type == "Lowpass":
-                resonated_audio = filter(audio, sample_rate=sr, cutoff=cutoff_frequency, resonance=resonance, q=qfactor, filter_type="lowpass")
+                resonated_audio = filter(audio, sr, cutoff=cutoff_frequency, resonance=resonance, q=qfactor, filter_type="lowpass")
             elif filter_type == "Bandpass":
-                resonated_audio = filter(audio, sample_rate=sr, cutoff=cutoff_frequency, resonance=resonance, q=qfactor, filter_type="bandpass")
+                resonated_audio = filter(audio, sr, cutoff=cutoff_frequency, resonance=resonance, q=qfactor, filter_type="bandpass")
             sf.write("temp.mp3", resonated_audio, sr)
             ps.playsound("temp.mp3")
             os.remove("temp.mp3")
@@ -144,9 +152,9 @@ while True:
             resonance = values["-RESONANCE-"]
             qfactor = values["-QFACTOR_RESONANCE-"]
             if filter_type == "Lowpass":
-                resonated_audio = filter(audio, sample_rate=sr, cutoff=cutoff_frequency, resonance=resonance, q=qfactor, filter_type="lowpass")
+                resonated_audio = filter(audio, sr, cutoff=cutoff_frequency, resonance=resonance, q=qfactor, filter_type="lowpass")
             elif filter_type == "Bandpass":
-                resonated_audio = filter(audio, sample_rate=sr, cutoff=cutoff_frequency, resonance=resonance, q=qfactor, filter_type="bandpass")
+                resonated_audio = filter(audio, sr, cutoff=cutoff_frequency, resonance=resonance, q=qfactor, filter_type="bandpass")
             sf.write("resonated.mp3", resonated_audio, sr)
             shutil.move("resonated.mp3", resonance_save_folder + "/" + resonance_filename + ".mp3")
         except:
@@ -204,7 +212,7 @@ while True:
             phaser_stages = int(values["-PHASER_STAGES-"])
             phaser_mix = values["-PHASER_MIX-"]
             phaser_wet_mix = values["-PHASER_WET_MIX-"]
-            phased = phaser_flanger(audio, sample_rate=sr, phaser_rate=phaser_rate, phaser_depth=phaser_depth, phaser_stages=phaser_stages, phaser_mix=phaser_mix, wet_mix=phaser_wet_mix, flanger_mix=0.0)
+            phased = phaser_flanger(audio, sr, phaser_rate=phaser_rate, phaser_depth=phaser_depth, phaser_stages=phaser_stages, phaser_mix=phaser_mix, wet_mix=phaser_wet_mix, flanger_mix=0.0)
             sf.write("temp.mp3", phased, sr)
             ps.playsound("temp.mp3")
             os.remove("temp.mp3")
@@ -222,7 +230,7 @@ while True:
             phaser_depth = values["-PHASER_DEPTH-"]
             phaser_stages = int(values["-PHASER_STAGES-"])
             phaser_mix = values["-PHASER_MIX-"]
-            phased = phaser_flanger(audio, sample_rate=sr, phaser_rate=phaser_rate, phaser_depth=phaser_depth, phaser_stages=phaser_stages, phaser_mix=phaser_mix, wet_mix=0.0, flanger_mix=0.0)
+            phased = phaser_flanger(audio, sr, phaser_rate=phaser_rate, phaser_depth=phaser_depth, phaser_stages=phaser_stages, phaser_mix=phaser_mix, wet_mix=0.0, flanger_mix=0.0)
             sf.write("phased.mp3", phased, sr)
             shutil.move("phased.mp3", phaser_save_folder + "/" + phaser_filename + ".mp3")
         except:
@@ -238,7 +246,7 @@ while True:
             flanger_delay_base = values["-FLANGER_DELAY_BASE-"]
             flanger_delay_depth = values["-FLANGER_DELAY_DEPTH-"]
             flanger_mix = values["-FLANGER_MIX-"]
-            flanged = phaser_flanger(audio, sample_rate=sr, flanger_rate=flanger_rate, flanger_delay_base=flanger_delay_base, flanger_delay_depth=flanger_delay_depth, flanger_mix=flanger_mix, phaser_mix=0.0)
+            flanged = phaser_flanger(audio, sr, flanger_rate=flanger_rate, flanger_delay_base=flanger_delay_base, flanger_delay_depth=flanger_delay_depth, flanger_mix=flanger_mix, phaser_mix=0.0)
             sf.write("temp.mp3", flanged, sr)
             ps.playsound("temp.mp3")
             os.remove("temp.mp3")
@@ -256,7 +264,7 @@ while True:
             flanger_delay_base = values["-FLANGER_DELAY_BASE-"]
             flanger_delay_depth = values["-FLANGER_DELAY_DEPTH-"]
             flanger_mix = values["-FLANGER_MIX-"]
-            flanged = phaser_flanger(audio, sample_rate=sr, flanger_rate=flanger_rate, flanger_delay_base=flanger_delay_base, flanger_delay_depth=flanger_delay_depth, flanger_mix=flanger_mix, phaser_mix=0.0)
+            flanged = phaser_flanger(audio, sr, flanger_rate=flanger_rate, flanger_delay_base=flanger_delay_base, flanger_delay_depth=flanger_delay_depth, flanger_mix=flanger_mix, phaser_mix=0.0)
             sf.write("flanged.mp3", flanged, sr)
             shutil.move("flanged.mp3", flanger_save_folder + "/" + flanger_filename + ".mp3")
         except:
@@ -265,5 +273,42 @@ while True:
                 os.remove("flanged.mp3")
             except:
                 pass
+            
+    elif event == "-CHORUS_PREVIEW-":
+        try:
+            chorus_modulation_amount = values["-CHORUS_MODULATION_AMOUNT-"]
+            chorus_speed = values["-CHORUS_SPEED-"]
+            chorus_numberof_clones = int(values["-CHORUS_NUMBEROF_CLONES-"])
+            chorus_delay = values["-CHORUS_DELAY-"]
+            chorus_mix = values["-CHORUS_MIX-"]
+            chorused = chorus(audio, sr, mix=chorus_mix, amount=chorus_modulation_amount, speed=chorus_speed, n_clones=chorus_numberof_clones, delay=chorus_delay)
+            sf.write("temp.mp3", chorused, sr)
+            ps.playsound("temp.mp3")
+            os.remove("temp.mp3")
+        except:
+            sg.popup("Error previewing sound.")
+            try:
+                os.remove("temp.mp3")
+            except:
+                pass
+    elif event == "-CHORUS_SAVE-":
+        try:
+            chorus_folder_select = values["-CHORUS_FOLDER_SELECT-"]
+            chorus_filename = values["-CHORUS_FILENAME-"]
+            chorus_modulation_amount = values["-CHORUS_MODULATION_AMOUNT-"]
+            chorus_speed = values["-CHORUS_SPEED-"]
+            chorus_numberof_clones = int(values["-CHORUS_NUMBEROF_CLONES-"])
+            chorus_delay = values["-CHORUS_DELAY-"]
+            chorus_mix = values["-CHORUS_MIX-"]
+            chorused = chorus(audio, sr, mix=chorus_mix, amount=chorus_modulation_amount, speed=chorus_speed, n_clones=chorus_numberof_clones, delay=chorus_delay)
+            sf.write("chorused.mp3", chorused, sr)
+            shutil.move("chorused.mp3", chorus_folder_select + "/" + chorus_filename + ".mp3")
+        except:
+            sg.popup("Error saving file.")
+            try:
+                os.remove("chorused.mp3")
+            except:
+                pass
+            
 
 window.close()
