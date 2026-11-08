@@ -217,14 +217,14 @@ while True:
     elif event == "-PHASER_SAVE-":
         try:
             phaser_save_folder = values["-PHASER_FOLDER_SELECT-"]
-            phaser_file_name = values["-PHASER_FILENAME-"]
+            phaser_filename = values["-PHASER_FILENAME-"]
             phaser_rate = values["-PHASER_RATE-"]
             phaser_depth = values["-PHASER_DEPTH-"]
             phaser_stages = int(values["-PHASER_STAGES-"])
             phaser_mix = values["-PHASER_MIX-"]
             phased = phaser_flanger(audio, sample_rate=sr, phaser_rate=phaser_rate, phaser_depth=phaser_depth, phaser_stages=phaser_stages, phaser_mix=phaser_mix, wet_mix=0.0, flanger_mix=0.0)
             sf.write("phased.mp3", phased, sr)
-            shutil.move("phased.mp3", phaser_save_folder + "/" + phaser_file_name + ".mp3")
+            shutil.move("phased.mp3", phaser_save_folder + "/" + phaser_filename + ".mp3")
         except:
             sg.popup("Error saving file.")
             try:
@@ -233,8 +233,37 @@ while True:
                 pass
             
     elif event == "-FLANGER_PREVIEW-":
-        pass
+        try:
+            flanger_rate = values["-FLANGER_RATE-"]
+            flanger_delay_base = values["-FLANGER_DELAY_BASE-"]
+            flanger_delay_depth = values["-FLANGER_DELAY_DEPTH-"]
+            flanger_mix = values["-FLANGER_MIX-"]
+            flanged = phaser_flanger(audio, sample_rate=sr, flanger_rate=flanger_rate, flanger_delay_base=flanger_delay_base, flanger_delay_depth=flanger_delay_depth, flanger_mix=flanger_mix, phaser_mix=0.0)
+            sf.write("temp.mp3", flanged, sr)
+            ps.playsound("temp.mp3")
+            os.remove("temp.mp3")
+        except:
+            sg.popup("Error previewing sound.")
+            try:
+                os.remove("temp.mp3")
+            except:
+                pass
     elif event == "-FLANGER_SAVE-":
-        pass
+        try:
+            flanger_save_folder = values["-FLANGER_FOLDER_SELECT-"]
+            flanger_filename = values["-FLANGER_FILENAME-"]
+            flanger_rate = values["-FLANGER_RATE-"]
+            flanger_delay_base = values["-FLANGER_DELAY_BASE-"]
+            flanger_delay_depth = values["-FLANGER_DELAY_DEPTH-"]
+            flanger_mix = values["-FLANGER_MIX-"]
+            flanged = phaser_flanger(audio, sample_rate=sr, flanger_rate=flanger_rate, flanger_delay_base=flanger_delay_base, flanger_delay_depth=flanger_delay_depth, flanger_mix=flanger_mix, phaser_mix=0.0)
+            sf.write("flanged.mp3", flanged, sr)
+            shutil.move("flanged.mp3", flanger_save_folder + "/" + flanger_filename + ".mp3")
+        except:
+            sg.popup("Error saving file.")
+            try:
+                os.remove("flanged.mp3")
+            except:
+                pass
 
 window.close()

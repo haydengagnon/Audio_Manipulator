@@ -197,6 +197,17 @@ phaser_layout = [
         ),
     ],
     [
+        sg.Text("Phaser Wet Mix"),
+        sg.Slider(
+            range=(0.0,1.0),
+            default_value=0.5,
+            resolution=0.1,
+            orientation="h",
+            size=(20,15),
+            key="-PHASER_WET_MIX-"
+        ),
+    ],
+    [
         sg.Text("Phaser Mix"),
         sg.Slider(
             range=(0.0,1.0),
@@ -228,7 +239,7 @@ flanger_layout = [
             resolution=0.1,
             orientation="h",
             size=(20,15),
-            key="-FLANGER_STAGES-",
+            key="-FLANGER_RATE-",
         ),
     ],
     [
