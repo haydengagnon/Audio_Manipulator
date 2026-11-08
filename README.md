@@ -6,8 +6,8 @@ An audio manipulating application that allows users to add effects to .mp3 and .
 - Resonance
 - Vocoder
 - Phaser
-- ~~Flanger~~
-- ~~Chorus~~
+- Flanger
+- Chorus
 - ~~Delay~~
 - ~~Glitch~~
 - ~~Saturation~~
