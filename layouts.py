@@ -288,8 +288,58 @@ flanger_layout = [
 
 chorus_layout = [
     [
-        
-    ]
+        sg.Text("Pitch Modulation Amount"),
+        sg.Slider(
+            range=(0.0,1.0),
+            default_value=1.0,
+            resolution=0.1,
+            orientation="h",
+            size=(20,15),
+            key="-CHORUS_PITCH_AMOUNT-",
+        ),
+    ],
+    [
+        sg.Text("Speed"),
+        sg.Slider(
+            range=(0.0,1.0),
+            default_value=0.1,
+            resolution=0.1,
+            orientation="h",
+            size=(20,15),
+            key="-CHORUS_SPEED-",
+        ),
+    ],
+    [
+        sg.Text("Number of Clones"),
+        sg.Slider(
+            range=(0,16),
+            default_value=4,
+            resolution=1,
+            orientation="h",
+            size=(20,15),
+            key="-CHORUS_NUMBEROF_CLONES-",
+        ),
+    ],
+    [
+        sg.Text("Mix"),
+        sg.Slider(
+            range=(0.0,1.0),
+            default_value=0.5,
+            resolution=0.1,
+            orientation="h",
+            size=(20,15),
+            key="-CHORUS_MIX-",
+        ),
+    ],
+        [
+        sg.Button("Preview", key="-CHORUS_PREVIEW-"),
+        sg.In(size=(25, 1), enable_events=True, key="-CHORUS_FOLDER_SELECT-", placeholder="Select Folder"),
+        sg.FolderBrowse(button_text="Select Save Folder"),
+    ],
+    [
+        sg.Button("Save", key="-CHORUS_SAVE-"),
+        sg.In(size=(15,1), enable_events=True, key="-CHORUS_FILENAME-", placeholder="Filename"),
+    ],
 ]
 
 delay_layout = [
@@ -337,5 +387,6 @@ file_select = [
         sg.Column(vocoder_layout, key="-VOCODER_LAYOUT-", visible=False),
         sg.Column(phaser_layout, key="-PHASER_LAYOUT-", visible=False),
         sg.Column(flanger_layout, key="-FLANGER_LAYOUT-", visible=False),
+        sg.Column(chorus_layout, key="-CHORUS_LAYOUT-", visible=False),
     ],
 ]
