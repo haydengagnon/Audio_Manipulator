@@ -449,6 +449,7 @@ delay_layout = [
         sg.Combo(
             ["digital", "analog"],
             default_value="digital",
+            enable_events=True,
             key="-DELAY_MODE-",
         ),
     ],

@@ -64,6 +64,10 @@ while True:
             window["-FLANGER_LAYOUT-"].update(visible=True)
         elif modifier_type == "Chorus":
             window["-CHORUS_LAYOUT-"].update(visible=True)
+        elif modifier_type == "Delay":
+            window["-DELAY_LAYOUT-"].update(visible=True)
+            window["-DELAY_LAYOUT_DIGITAL-"].update(visible=True)
+            window["-DELAY_LAYOUT_ANALOG-"].update(visible=False)
         
         if modifier_type != "Distortion":
             window["-DISTORTION_LAYOUT-"].update(visible=False)
@@ -77,6 +81,20 @@ while True:
             window["-FLANGER_LAYOUT-"].update(visible=False)
         if modifier_type != "Chorus":
             window["-CHORUS_LAYOUT-"].update(visible=False)
+        if modifier_type != "Delay":
+            window["-DELAY_LAYOUT-"].update(visible=False)
+            window["-DELAY_LAYOUT_DIGITAL-"].update(visible=False)
+            window["-DELAY_LAYOUT_ANALOG-"].update(visible=False)
+    
+    elif event == "-DELAY_MODE-":
+        delay_mode = values["-DELAY_MODE-"]
+        if delay_mode == "digital":
+            window["-DELAY_LAYOUT_ANALOG-"].update(visible=False)
+            window["-DELAY_LAYOUT_DIGITAL-"].update(visible=True)
+        elif delay_mode == "analog":
+            window["-DELAY_LAYOUT_DIGITAL-"].update(visible=False)
+            window["-DELAY_LAYOUT_ANALOG-"].update(visible=True)
+        
             
     elif event == "-PREVIEW_DISTORTION-":
         try:
