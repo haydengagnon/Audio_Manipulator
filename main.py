@@ -69,6 +69,7 @@ while True:
             window["-DELAY_LAYOUT-"].update(visible=True)
             window["-DELAY_LAYOUT_DIGITAL-"].update(visible=True)
             window["-DELAY_LAYOUT_ANALOG-"].update(visible=False)
+            window["-DELAY_MODE-"].update(value="digital")
         
         if modifier_type != "Distortion":
             window["-DISTORTION_LAYOUT-"].update(visible=False)
@@ -331,7 +332,7 @@ while True:
     
     elif event == "-DELAY_PREVIEW_DIGITAL-":
         try:
-            mode = "digital"
+            mode = values["-DELAY_MODE-"]
             delay_time = values["-DELAY_TIME-"]
             feedback = values["-DELAY_FEEDBACK-"]
             mix = values["-DELAY_MIX_DIGITAL-"]
@@ -346,7 +347,23 @@ while True:
             except:
                 pass
     elif event == "-DELAY_SAVE_DIGITAL-":
-        pass
+        try:
+            digital_delay_folder_select = values["-DELAY_DIGITAL_FOLDER_SELECT-"]
+            digital_delay_filename = values["-DELAY_DIGITAL_FILENAME-"]
+            mode = values["-DELAY_MODE-"]
+            delay_time = values["-DELAY_TIME-"]
+            feedback = values["-DELAY_FEEDBACK-"]
+            mix = values["-DELAY_MIX_DIGITAL-"]
+            digital_delay = delay(audio, sr, delay_time=delay_time, feedback=feedback, mix=mix, mode=mode)
+            sf.write("digital_delay.mp3", digital_delay, sr)
+            shutil.move("digital_delay.mp3", digital_delay_folder_select + "/" + digital_delay_filename + ".mp3")
+            sg.popup("File successfully save to " + digital_delay_folder_select)
+        except:
+            sg.popup("Error saving file.")
+            try:
+                os.remove("digital_delay.mp3")
+            except:
+                pass
     elif event == "-DELAY_PREVIEW_ANALOG-":
         pass
     elif event == "-DELAY_SAVE_ANALOG-":
