@@ -371,7 +371,7 @@ delay_layout_digital = [
         sg.FolderBrowse(button_text="Select Save Folder"),
     ],
     [
-        sg.Button("Save", key="-DELAY_DIGITAL_SAVE-"),
+        sg.Button("Save", key="-DELAY_SAVE_DIGITAL-"),
         sg.In(size=(15,1), enable_events=True, key="-DELAY_DIGITAL_FILENAME-", placeholder="Filename"),
     ],
 ]
@@ -438,7 +438,7 @@ delay_layout_analog = [
         sg.FolderBrowse(button_text="Select Save Folder"),
     ],
     [
-        sg.Button("Save", key="-DELAY_ANALOG_SAVE-"),
+        sg.Button("Save", key="-DELAY_SAVE_ANALOG-"),
         sg.In(size=(15,1), enable_events=True, key="-DELAY_ANALOG_FILENAME-", placeholder="Filename"),
     ],
 ]

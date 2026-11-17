@@ -6,6 +6,7 @@ from audio_dsp.effects import (
     filter,
     vocoder,
     phaser_flanger,
+    delay,
 )
 from audio_dsp.effects.random_chorus import chorus
 import PySimpleGUI as sg
@@ -327,6 +328,28 @@ while True:
                 os.remove("chorused.mp3")
             except:
                 pass
-            
+    
+    elif event == "-DELAY_PREVIEW_DIGITAL-":
+        try:
+            mode = "digital"
+            delay_time = values["-DELAY_TIME-"]
+            feedback = values["-DELAY_FEEDBACK-"]
+            mix = values["-DELAY_MIX_DIGITAL-"]
+            digital_delay = delay(audio, sr, delay_time=delay_time, feedback=feedback, mix=mix, mode=mode)
+            sf.write("temp.mp3", digital_delay, sr)
+            ps.playsound("temp.mp3")
+            os.remove("temp.mp3")
+        except:
+            sg.popup("Error previewing sound.")
+            try:
+                os.remove("temp.mp3")
+            except:
+                pass
+    elif event == "-DELAY_SAVE_DIGITAL-":
+        pass
+    elif event == "-DELAY_PREVIEW_ANALOG-":
+        pass
+    elif event == "-DELAY_SAVE_ANALOG-":
+        pass
 
 window.close()
