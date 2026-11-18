@@ -9,6 +9,7 @@ from audio_dsp.effects import (
     delay,
 )
 from audio_dsp.effects.random_chorus import chorus
+from audio_dsp.effects.glitch import glitch
 import PySimpleGUI as sg
 import os
 import soundfile as sf
@@ -408,6 +409,39 @@ while True:
             sg.popup("Error saving file.")
             try:
                 os.remove("delayed.mp3")
+            except:
+                pass
+        
+    elif event == "-GLITCH_PREVIEW-":
+        try:
+            n_segments = int(values["-GLITCH_NUMBER_OF_SEGMENTS-"])
+            intensity = values["-GLITCH_INTENSITY-"]
+            loop_length = values["-GLITCH_LOOP_LENGTH-"]
+            glitched = glitch(audio, sr, n_segments=n_segments, intensity=intensity, loop_length=loop_length)
+            sf.write("temp.mp3", glitched, sr)
+            ps.playsound("temp.mp3")
+            os.remove("temp.mp3")
+        except:
+            sg.popup("Error previewing sound.")
+            try:
+                os.remove("temp.mp3")
+            except:
+                pass
+    elif event == "-GLITCH_SAVE-":
+        try:
+            folder_select = values["-GLITCH_FOLDER_SELECT-"]
+            filename = values["-GLITCH_FILENAME-"]
+            n_segments = int(values["-GLITCH_NUMBER_OF_SEGMENTS-"])
+            intensity = values["-GLITCH_INTENSITY-"]
+            loop_length = values["-GLITCH_LOOP_LENGTH-"]
+            glitched = glitch(audio, sr, n_segments=n_segments, intensity=intensity, loop_length=loop_length)
+            sf.write("glitched.mp3", glitched, sr)
+            shutil.move("glitched.mp3", folder_select + "/" + filename + ".mp3")
+            sg.popup("File successfully saved to " + folder_select)
+        except:
+            sg.popup("Error saving sound.")
+            try:
+                os.remove("glitched.mp3")
             except:
                 pass
 
