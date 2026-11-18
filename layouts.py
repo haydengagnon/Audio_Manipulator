@@ -505,7 +505,7 @@ glitch_layout = [
     [
         sg.Text("Loop Length"),
         sg.Slider(
-            range=(0.0,3.0),
+            range=(1.0,10.0),
             default_value=2.0,
             resolution=0.1,
             orientation="h",
