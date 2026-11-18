@@ -70,6 +70,8 @@ while True:
             window["-DELAY_LAYOUT_DIGITAL-"].update(visible=True)
             window["-DELAY_LAYOUT_ANALOG-"].update(visible=False)
             window["-DELAY_MODE-"].update(value="digital")
+        elif modifier_type == "Glitch":
+            window["-GLITCH_LAYOUT-"].update(visible=True)
         
         if modifier_type != "Distortion":
             window["-DISTORTION_LAYOUT-"].update(visible=False)
@@ -87,6 +89,8 @@ while True:
             window["-DELAY_LAYOUT-"].update(visible=False)
             window["-DELAY_LAYOUT_DIGITAL-"].update(visible=False)
             window["-DELAY_LAYOUT_ANALOG-"].update(visible=False)
+        if modifier_type != "Glitch":
+            window["-GLITCH_LAYOUT-"].update(visible=False)
     
     elif event == "-DELAY_MODE-":
         delay_mode = values["-DELAY_MODE-"]
@@ -357,7 +361,7 @@ while True:
             delayed = delay(audio, sr, delay_time=delay_time, feedback=feedback, mix=mix, mode=mode)
             sf.write("digital_delay.mp3", delayed, sr)
             shutil.move("digital_delay.mp3", folder_select + "/" + filename + ".mp3")
-            sg.popup("File successfully save to " + folder_select)
+            sg.popup("File successfully saved to " + folder_select)
         except:
             sg.popup("Error saving file.")
             try:
@@ -385,6 +389,26 @@ while True:
             except:
                 pass
     elif event == "-DELAY_SAVE_ANALOG-":
-        pass
+        try:
+            folder_select = values["-DELAY_ANALOG_FOLDER_SELECT-"]
+            filename = values["-DELAY_ANALOG_FILENAME-"]
+            mode = values["-DELAY_MODE-"]
+            delay_time = values["-DELAY_TIME-"]
+            feedback = values["-DELAY_FEEDBACK-"]
+            lp_cutoff = values["-DELAY_LOWPASS_CUTOFF-"]
+            flutter_depth = values["-DELAY_FLUTTER_DEPTH-"]
+            pitch_drift_depth = values["-DELAY_PITCH_DRIFT_DEPTH-"]
+            drive = values["-DELAY_DRIVE-"]
+            mix = values["-DELAY_MIX_ANALOG-"]
+            delayed = delay(audio, sr, delay_time=delay_time, feedback=feedback, mix=mix, mode=mode, lp_cutoff=lp_cutoff, flutter_depth=flutter_depth, pitch_drift_depth=pitch_drift_depth)
+            sf.write("delayed.mp3", delayed, sr)
+            shutil.move("delayed.mp3", folder_select + "/" + filename + ".mp3")
+            sg.popup("File successfully saved to " + folder_select)
+        except:
+            sg.popup("Error saving file.")
+            try:
+                os.remove("delayed.mp3")
+            except:
+                pass
 
 window.close()

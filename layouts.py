@@ -483,8 +483,45 @@ delay_layout = [
 
 glitch_layout = [
     [
-        
-    ]
+        sg.Text("Number of Segments"),
+        sg.Combo(
+            [16, 32, 64, 128],
+            default_value=16,
+            enable_events=True,
+            key="-GLITCH_NUMBER_OF_SEGMENTS-"
+        ),
+    ],
+    [
+        sg.Text("Intensity"),
+        sg.Slider(
+            range=(0.0,1.0),
+            default_value=0.5,
+            resolution=0.1,
+            orientation="h",
+            size=(20,15),
+            key="-GLITCH_INTENSITY-",
+        ),
+    ],
+    [
+        sg.Text("Loop Length"),
+        sg.Slider(
+            range=(0.0,3.0),
+            default_value=2.0,
+            resolution=0.1,
+            orientation="h",
+            size=(20,15),
+            key="-GLITCH_LOOP_LENGTH-"
+        ),
+    ],
+    [
+        sg.Button("Preview", key="-GLITCH_PREVIEW-"),
+        sg.In(size=(25,1), enable_events=True, key="-GLITCH_FOLDER_SELECT-"),
+        sg.FolderBrowse(button_text="Select Save Folder"),
+    ],
+    [
+        sg.Button("Save", key="-GLITCH_SAVE-"),
+        sg.In(size=(15,1), enable_events=True, key="-GLITCH_FILENAME-", placeholder="Filename"),
+    ],
 ]
 
 multi_band_saturation_layout = [
@@ -522,5 +559,8 @@ file_select = [
         sg.Column(flanger_layout, key="-FLANGER_LAYOUT-", visible=False),
         sg.Column(chorus_layout, key="-CHORUS_LAYOUT-", visible=False),
         sg.Column(delay_layout, key="-DELAY_LAYOUT-", visible=False),
+        sg.Column(glitch_layout, key="-GLITCH_LAYOUT-", visible=False),
+        sg.Column(multi_band_saturation_layout, key="-MULTI_BAND_SATURATION_LAYOUT-", visible=False),
+        sg.Column(negative_audio_layout, key="-NEGATIVE_AUDIO_LAYOUT-", visible=False),
     ],
 ]
