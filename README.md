@@ -8,6 +8,6 @@ An audio manipulating application that allows users to add effects to .mp3 and .
 - Phaser
 - Flanger
 - Chorus
-- ~~Delay~~
-- ~~Glitch~~
+- Delay
+- Glitch
 - ~~Saturation~~

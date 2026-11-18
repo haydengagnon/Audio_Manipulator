@@ -9,6 +9,7 @@ from audio_dsp.effects import (
     delay,
 )
 from audio_dsp.effects.random_chorus import chorus
+from audio_dsp.effects.glitch import glitch
 import PySimpleGUI as sg
 import os
 import soundfile as sf
@@ -408,6 +409,23 @@ while True:
             sg.popup("Error saving file.")
             try:
                 os.remove("delayed.mp3")
+            except:
+                pass
+        
+    elif event == "-GLITCH_PREVIEW-":
+        try:
+            n_segments = int(values["-GLITCH_NUMBER_OF_SEGMENTS-"])
+            intensity = values["-GLITCH_INTENSITY-"]
+            loop_length = values["-GLITCH_LOOP_LENGTH-"]
+            #glitched = glitch(audio, sr, n_segments=32, intensity=0.3, loop_length=4.0)
+            glitched = glitch(audio, sr, n_segments=n_segments, intensity=intensity, loop_length=loop_length)
+            sf.write("temp.mp3", glitched, sr)
+            ps.playsound("temp.mp3")
+            os.remove("temp.mp3")
+        except:
+            sg.popup("Error previewing sound.")
+            try:
+                os.remove("temp.mp3")
             except:
                 pass
 
