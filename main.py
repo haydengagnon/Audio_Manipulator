@@ -6,6 +6,7 @@ from audio_dsp.effects import (
     filter,
     vocoder,
     phaser_flanger,
+    delay,
 )
 from audio_dsp.effects.random_chorus import chorus
 import PySimpleGUI as sg
@@ -64,6 +65,13 @@ while True:
             window["-FLANGER_LAYOUT-"].update(visible=True)
         elif modifier_type == "Chorus":
             window["-CHORUS_LAYOUT-"].update(visible=True)
+        elif modifier_type == "Delay":
+            window["-DELAY_LAYOUT-"].update(visible=True)
+            window["-DELAY_LAYOUT_DIGITAL-"].update(visible=True)
+            window["-DELAY_LAYOUT_ANALOG-"].update(visible=False)
+            window["-DELAY_MODE-"].update(value="digital")
+        elif modifier_type == "Glitch":
+            window["-GLITCH_LAYOUT-"].update(visible=True)
         
         if modifier_type != "Distortion":
             window["-DISTORTION_LAYOUT-"].update(visible=False)
@@ -77,6 +85,22 @@ while True:
             window["-FLANGER_LAYOUT-"].update(visible=False)
         if modifier_type != "Chorus":
             window["-CHORUS_LAYOUT-"].update(visible=False)
+        if modifier_type != "Delay":
+            window["-DELAY_LAYOUT-"].update(visible=False)
+            window["-DELAY_LAYOUT_DIGITAL-"].update(visible=False)
+            window["-DELAY_LAYOUT_ANALOG-"].update(visible=False)
+        if modifier_type != "Glitch":
+            window["-GLITCH_LAYOUT-"].update(visible=False)
+    
+    elif event == "-DELAY_MODE-":
+        delay_mode = values["-DELAY_MODE-"]
+        if delay_mode == "digital":
+            window["-DELAY_LAYOUT_ANALOG-"].update(visible=False)
+            window["-DELAY_LAYOUT_DIGITAL-"].update(visible=True)
+        elif delay_mode == "analog":
+            window["-DELAY_LAYOUT_DIGITAL-"].update(visible=False)
+            window["-DELAY_LAYOUT_ANALOG-"].update(visible=True)
+        
             
     elif event == "-PREVIEW_DISTORTION-":
         try:
@@ -309,6 +333,82 @@ while True:
                 os.remove("chorused.mp3")
             except:
                 pass
-            
+    
+    elif event == "-DELAY_PREVIEW_DIGITAL-":
+        try:
+            mode = values["-DELAY_MODE-"]
+            delay_time = values["-DELAY_TIME-"]
+            feedback = values["-DELAY_FEEDBACK-"]
+            mix = values["-DELAY_MIX_DIGITAL-"]
+            delayed = delay(audio, sr, delay_time=delay_time, feedback=feedback, mix=mix, mode=mode)
+            sf.write("temp.mp3", delayed, sr)
+            ps.playsound("temp.mp3")
+            os.remove("temp.mp3")
+        except:
+            sg.popup("Error previewing sound.")
+            try:
+                os.remove("temp.mp3")
+            except:
+                pass
+    elif event == "-DELAY_SAVE_DIGITAL-":
+        try:
+            folder_select = values["-DELAY_DIGITAL_FOLDER_SELECT-"]
+            filename = values["-DELAY_DIGITAL_FILENAME-"]
+            mode = values["-DELAY_MODE-"]
+            delay_time = values["-DELAY_TIME-"]
+            feedback = values["-DELAY_FEEDBACK-"]
+            mix = values["-DELAY_MIX_DIGITAL-"]
+            delayed = delay(audio, sr, delay_time=delay_time, feedback=feedback, mix=mix, mode=mode)
+            sf.write("digital_delay.mp3", delayed, sr)
+            shutil.move("digital_delay.mp3", folder_select + "/" + filename + ".mp3")
+            sg.popup("File successfully saved to " + folder_select)
+        except:
+            sg.popup("Error saving file.")
+            try:
+                os.remove("digital_delay.mp3")
+            except:
+                pass
+    elif event == "-DELAY_PREVIEW_ANALOG-":
+        try:
+            mode = values["-DELAY_MODE-"]
+            delay_time = values["-DELAY_TIME-"]
+            feedback = values["-DELAY_FEEDBACK-"]
+            lp_cutoff = values["-DELAY_LOWPASS_CUTOFF-"]
+            flutter_depth = values["-DELAY_FLUTTER_DEPTH-"]
+            pitch_drift_depth = values["-DELAY_PITCH_DRIFT_DEPTH-"]
+            drive = values["-DELAY_DRIVE-"]
+            mix = values["-DELAY_MIX_ANALOG-"]
+            delayed = delay(audio, sr, delay_time=delay_time, feedback=feedback, mix=mix, mode=mode, lp_cutoff=lp_cutoff, flutter_depth=flutter_depth, pitch_drift_depth=pitch_drift_depth)
+            sf.write("temp.mp3", delayed, sr)
+            ps.playsound("temp.mp3")
+            os.remove("temp.mp3")
+        except:
+            sg.popup("Error previewing sound.")
+            try:
+                os.remove("temp.mp3")
+            except:
+                pass
+    elif event == "-DELAY_SAVE_ANALOG-":
+        try:
+            folder_select = values["-DELAY_ANALOG_FOLDER_SELECT-"]
+            filename = values["-DELAY_ANALOG_FILENAME-"]
+            mode = values["-DELAY_MODE-"]
+            delay_time = values["-DELAY_TIME-"]
+            feedback = values["-DELAY_FEEDBACK-"]
+            lp_cutoff = values["-DELAY_LOWPASS_CUTOFF-"]
+            flutter_depth = values["-DELAY_FLUTTER_DEPTH-"]
+            pitch_drift_depth = values["-DELAY_PITCH_DRIFT_DEPTH-"]
+            drive = values["-DELAY_DRIVE-"]
+            mix = values["-DELAY_MIX_ANALOG-"]
+            delayed = delay(audio, sr, delay_time=delay_time, feedback=feedback, mix=mix, mode=mode, lp_cutoff=lp_cutoff, flutter_depth=flutter_depth, pitch_drift_depth=pitch_drift_depth)
+            sf.write("delayed.mp3", delayed, sr)
+            shutil.move("delayed.mp3", folder_select + "/" + filename + ".mp3")
+            sg.popup("File successfully saved to " + folder_select)
+        except:
+            sg.popup("Error saving file.")
+            try:
+                os.remove("delayed.mp3")
+            except:
+                pass
 
 window.close()
