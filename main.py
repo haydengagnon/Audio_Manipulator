@@ -10,6 +10,7 @@ from audio_dsp.effects import (
 )
 from audio_dsp.effects.random_chorus import chorus
 from audio_dsp.effects.glitch import glitch
+from audio_dsp.effects.multi_band_saturation import process_multi_band
 import PySimpleGUI as sg
 import os
 import soundfile as sf
@@ -73,6 +74,18 @@ while True:
             window["-DELAY_MODE-"].update(value="digital")
         elif modifier_type == "Glitch":
             window["-GLITCH_LAYOUT-"].update(visible=True)
+        elif modifier_type == "Multi-Band Saturation":
+            window["-MULTI_BAND_SATURATION_LAYOUT-"].update(visible=True)
+            window["-SATURATION_NUMBER_OF_CROSSOVERS-"].update(value=1)
+            window["-SATURATION_CROSSOVER_ONE-"].update(visible=True)
+            window["-SATURATION_CROSSOVER_TWO-"].update(visible=False)
+            window["-SATURATION_CROSSOVER_THREE-"].update(visible=False)
+            window["-SATURATION_CROSSOVER_FOUR-"].update(visible=False)
+            window["-SATURATION_DRIVE_ONE-"].update(visible=True)
+            window["-SATURATION_DRIVE_TWO-"].update(visible=True)
+            window["-SATURATION_DRIVE_THREE-"].update(visible=False)
+            window["-SATURATION_DRIVE_FOUR-"].update(visible=False)
+            window["-SATURATION_DRIVE_FIVE-"].update(visible=False)
         
         if modifier_type != "Distortion":
             window["-DISTORTION_LAYOUT-"].update(visible=False)
@@ -92,6 +105,8 @@ while True:
             window["-DELAY_LAYOUT_ANALOG-"].update(visible=False)
         if modifier_type != "Glitch":
             window["-GLITCH_LAYOUT-"].update(visible=False)
+        if modifier_type != "Multi-Band Saturation":
+            window["-MULTI_BAND_SATURATION_LAYOUT-"].update(visible=False)
     
     elif event == "-DELAY_MODE-":
         delay_mode = values["-DELAY_MODE-"]
@@ -101,7 +116,49 @@ while True:
         elif delay_mode == "analog":
             window["-DELAY_LAYOUT_DIGITAL-"].update(visible=False)
             window["-DELAY_LAYOUT_ANALOG-"].update(visible=True)
-        
+    
+    elif event == "-SATURATION_NUMBER_OF_CROSSOVERS-":
+        number_of_crossovers = values["-SATURATION_NUMBER_OF_CROSSOVERS-"]
+        if number_of_crossovers == 1:
+            window["-SATURATION_CROSSOVER_ONE-"].update(visible=True)
+            window["-SATURATION_CROSSOVER_TWO-"].update(visible=False)
+            window["-SATURATION_CROSSOVER_THREE-"].update(visible=False)
+            window["-SATURATION_CROSSOVER_FOUR-"].update(visible=False)
+            window["-SATURATION_DRIVE_ONE-"].update(visible=True)
+            window["-SATURATION_DRIVE_TWO-"].update(visible=True)
+            window["-SATURATION_DRIVE_THREE-"].update(visible=False)
+            window["-SATURATION_DRIVE_FOUR-"].update(visible=False)
+            window["-SATURATION_DRIVE_FIVE-"].update(visible=False)
+        elif number_of_crossovers == 2:
+            window["-SATURATION_CROSSOVER_ONE-"].update(visible=True)
+            window["-SATURATION_CROSSOVER_TWO-"].update(visible=True)
+            window["-SATURATION_CROSSOVER_THREE-"].update(visible=False)
+            window["-SATURATION_CROSSOVER_FOUR-"].update(visible=False)
+            window["-SATURATION_DRIVE_ONE-"].update(visible=True)
+            window["-SATURATION_DRIVE_TWO-"].update(visible=True)
+            window["-SATURATION_DRIVE_THREE-"].update(visible=True)
+            window["-SATURATION_DRIVE_FOUR-"].update(visible=False)
+            window["-SATURATION_DRIVE_FIVE-"].update(visible=False)
+        elif number_of_crossovers == 3:
+            window["-SATURATION_CROSSOVER_ONE-"].update(visible=True)
+            window["-SATURATION_CROSSOVER_TWO-"].update(visible=True)
+            window["-SATURATION_CROSSOVER_THREE-"].update(visible=True)
+            window["-SATURATION_CROSSOVER_FOUR-"].update(visible=False)
+            window["-SATURATION_DRIVE_ONE-"].update(visible=True)
+            window["-SATURATION_DRIVE_TWO-"].update(visible=True)
+            window["-SATURATION_DRIVE_THREE-"].update(visible=True)
+            window["-SATURATION_DRIVE_FOUR-"].update(visible=True)
+            window["-SATURATION_DRIVE_FIVE-"].update(visible=False)
+        elif number_of_crossovers == 4:
+            window["-SATURATION_CROSSOVER_ONE-"].update(visible=True)
+            window["-SATURATION_CROSSOVER_TWO-"].update(visible=True)
+            window["-SATURATION_CROSSOVER_THREE-"].update(visible=True)
+            window["-SATURATION_CROSSOVER_FOUR-"].update(visible=True)
+            window["-SATURATION_DRIVE_ONE-"].update(visible=True)
+            window["-SATURATION_DRIVE_TWO-"].update(visible=True)
+            window["-SATURATION_DRIVE_THREE-"].update(visible=True)
+            window["-SATURATION_DRIVE_FOUR-"].update(visible=True)
+            window["-SATURATION_DRIVE_FIVE-"].update(visible=True)
             
     elif event == "-PREVIEW_DISTORTION-":
         try:
