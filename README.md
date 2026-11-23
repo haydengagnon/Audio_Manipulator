@@ -10,4 +10,4 @@ An audio manipulating application that allows users to add effects to .mp3 and .
 - Chorus
 - Delay
 - Glitch
-- ~~Saturation~~
+- Saturation

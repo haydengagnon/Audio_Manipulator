@@ -524,16 +524,149 @@ glitch_layout = [
     ],
 ]
 
-multi_band_saturation_layout = [
+saturation_crossover_layout = [
     [
-        
-    ]
+        sg.Text("Crossover (Hz)"),
+    ],
+    [
+        sg.Slider(
+            range=(100, 8000),
+            default_value=100,
+            resolution=100,
+            orientation="h",
+            size=(20,15),
+            key="-SATURATION_CROSSOVER_ONE-",
+        ),
+    ],
+    [
+        sg.pin(
+            sg.Slider(
+                range=(100, 8000),
+                default_value=100,
+                resolution=100,
+                orientation="h",
+                size=(20,15),
+                key="-SATURATION_CROSSOVER_TWO-",
+                visible=False,
+            ),
+        ),
+    ],
+    [
+        sg.pin(
+            sg.Slider(
+                range=(100, 8000),
+                default_value=100,
+                resolution=100,
+                orientation="h",
+                size=(20,15),
+                key="-SATURATION_CROSSOVER_THREE-",
+                visible=False,
+            ),
+        ),
+    ],
+    [
+        sg.pin(
+            sg.Slider(
+                range=(100, 8000),
+                default_value=100,
+                resolution=100,
+                orientation="h",
+                size=(20,15),
+                key="-SATURATION_CROSSOVER_FOUR-",
+                visible=False,
+            ),
+        ),
+    ],
 ]
 
-negative_audio_layout = [
+saturation_drive_layout = [
     [
-        
-    ]
+        sg.Text("Drives"),
+    ],
+    [
+        sg.Slider(
+            range=(1.0,4.),
+            default_value=1.0,
+            resolution=0.1,
+            orientation="h",
+            size=(20,15),
+            key="-SATURATION_DRIVE_ONE-",
+        ),
+    ],
+    [
+        sg.Slider(
+            range=(1.0,4.),
+            default_value=1.0,
+            resolution=0.1,
+            orientation="h",
+            size=(20,15),
+            key="-SATURATION_DRIVE_TWO-",
+        ),
+    ],
+    [
+        sg.pin(
+            sg.Slider(
+                range=(1.0,4.),
+                default_value=1.0,
+                resolution=0.1,
+                orientation="h",
+                size=(20,15),
+                key="-SATURATION_DRIVE_THREE-",
+                visible=False,
+            ),
+        ),
+    ],
+    [
+        sg.pin(
+            sg.Slider(
+                range=(1.0,4.),
+                default_value=1.0,
+                resolution=0.1,
+                orientation="h",
+                size=(20,15),
+                key="-SATURATION_DRIVE_FOUR-",
+                visible=False,
+            ),
+        ),
+    ],
+    [
+        sg.pin(
+            sg.Slider(
+                range=(1.0,4.),
+                default_value=1.0,
+                resolution=0.1,
+                orientation="h",
+                size=(20,15),
+                key="-SATURATION_DRIVE_FIVE-",
+                visible=False,
+            ),
+        ),
+    ],
+]
+
+multi_band_saturation_layout = [
+    [
+        sg.Text("Number of Crossovers"),
+        sg.Combo(
+            [1,2,3,4],
+            default_value=1,
+            enable_events=True,
+            key="-SATURATION_NUMBER_OF_CROSSOVERS-",
+        ),
+    ],
+    [
+        sg.Column(saturation_crossover_layout, key="-SATURATION_CROSSOVER_LAYOUT-"),
+        sg.Column(saturation_drive_layout, key="-SATURATION_DRIVE_LAYOUT-"),
+    ],
+    [
+        sg.Button("Preview", key="-SATURATION_PREVIEW-"),
+        sg.In(size=(25,1), enable_events=True, key="-SATURATION_FOLDER_SELECT-"),
+        sg.FolderBrowse(button_text="Select Save Folder"),
+    ],
+    [
+        sg.Button("Save", key="-SATURATION_SAVE-"),
+        sg.In(size=(15,1), enable_events=True, key="-SATURATION_FILENAME-", placeholder="Filename"),
+    ],
 ]
 
 file_select = [
@@ -546,7 +679,7 @@ file_select = [
     [
       sg.Text("Modifier Type"),
       sg.Combo(
-            ["Distortion", "Resonance", "Vocoder", "Phaser", "Flanger", "Chorus", "Delay", "Glitch", "Multi-Band Saturation", "Negative Audio", "Sidechain", "Compressor"],
+            ["Distortion", "Resonance", "Vocoder", "Phaser", "Flanger", "Chorus", "Delay", "Glitch", "Multi-Band Saturation"],
             enable_events=True,
             key="-MODIFIER_TYPE-",
       )  
@@ -561,6 +694,5 @@ file_select = [
         sg.Column(delay_layout, key="-DELAY_LAYOUT-", visible=False),
         sg.Column(glitch_layout, key="-GLITCH_LAYOUT-", visible=False),
         sg.Column(multi_band_saturation_layout, key="-MULTI_BAND_SATURATION_LAYOUT-", visible=False),
-        sg.Column(negative_audio_layout, key="-NEGATIVE_AUDIO_LAYOUT-", visible=False),
     ],
 ]
