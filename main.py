@@ -501,5 +501,127 @@ while True:
                 os.remove("glitched.mp3")
             except:
                 pass
+    
+    # Does not work with .Wav files, don't care enough to fix right now. Maybe in the future
+    # Error when crossover values are not ascending, could fix with dynamic bars but that sounds like a lot of work and I'm not doing that right now.
+    elif event == "-SATURATION_PREVIEW-":
+        number_of_crossovers = values["-SATURATION_NUMBER_OF_CROSSOVERS-"]
+        if number_of_crossovers == 1:
+            try:
+                crossovers = [int(values["-SATURATION_CROSSOVER_ONE-"])]
+                drives = [values["-SATURATION_DRIVE_ONE-"], values["-SATURATION_DRIVE_TWO-"]]
+                saturated = process_multi_band(audio, fs=sr, crossovers=crossovers, drives=drives)
+                sf.write("temp.mp3", saturated, sr)
+                ps.playsound("temp.mp3")
+                os.remove("temp.mp3")
+            except:
+                sg.popup("Error previewing sound.")
+                try:
+                    os.remove("temp.mp3")
+                except:
+                    pass
+        elif number_of_crossovers == 2:
+            try:
+                crossovers = [int(values["-SATURATION_CROSSOVER_ONE-"]), int(values["-SATURATION_CROSSOVER_TWO-"])]
+                drives = [values["-SATURATION_DRIVE_ONE-"], values["-SATURATION_DRIVE_TWO-"], values["-SATURATION_DRIVE_THREE-"]]
+                saturated = process_multi_band(audio, fs=sr, crossovers=crossovers, drives=drives)
+                sf.write("temp.mp3", saturated, sr)
+                ps.playsound("temp.mp3")
+                os.remove("temp.mp3")
+            except:
+                sg.popup("Error previewing sound.")
+                try:
+                    os.remove("temp.mp3")
+                except:
+                    pass
+        elif number_of_crossovers == 3:
+            try:
+                crossovers = [int(values["-SATURATION_CROSSOVER_ONE-"]), int(values["-SATURATION_CROSSOVER_TWO-"]), int(values["-SATURATION_CROSSOVER_THREE-"])]
+                drives = [values["-SATURATION_DRIVE_ONE-"], values["-SATURATION_DRIVE_TWO-"], values["-SATURATION_DRIVE_THREE-"], values["-SATURATION_DRIVE_FOUR-"]]
+                saturated = process_multi_band(audio, fs=sr, crossovers=crossovers, drives=drives)
+                sf.write("temp.mp3", saturated, sr)
+                ps.playsound("temp.mp3")
+                os.remove("temp.mp3")
+            except:
+                sg.popup("Error previewing sound.")
+                try:
+                    os.remove("temp.mp3")
+                except:
+                    pass
+        elif number_of_crossovers == 4:
+            try:
+                crossovers = [int(values["-SATURATION_CROSSOVER_ONE-"]), int(values["-SATURATION_CROSSOVER_TWO-"]), int(values["-SATURATION_CROSSOVER_THREE-"]), int(values["-SATURATION_CROSSOVER_FOUR-"])]
+                drives = [values["-SATURATION_DRIVE_ONE-"], values["-SATURATION_DRIVE_TWO-"], values["-SATURATION_DRIVE_THREE-"], values["-SATURATION_DRIVE_FOUR-"], values["-SATURATION_DRIVE_FIVE-"]]
+                saturated = process_multi_band(audio, fs=sr, crossovers=crossovers, drives=drives)
+                sf.write("temp.mp3", saturated, sr)
+                ps.playsound("temp.mp3")
+                os.remove("temp.mp3")
+            except:
+                sg.popup("Error previewing sound.")
+                try:
+                    os.remove("temp.mp3")
+                except:
+                    pass
+    elif event == "-SATURATION_SAVE-":
+        number_of_crossovers = values["-SATURATION_NUMBER_OF_CROSSOVERS-"]
+        folder_select = values["-SATURATION_FOLDER_SELECT-"]
+        filename = values["-SATURATION_FILENAME-"]
+        if number_of_crossovers == 1:
+            try:
+                crossovers = [int(values["-SATURATION_CROSSOVER_ONE-"])]
+                drives = [values["-SATURATION_DRIVE_ONE-"], values["-SATURATION_DRIVE_TWO-"]]
+                saturated = process_multi_band(audio, fs=sr, crossovers=crossovers, drives=drives)
+                sf.write("saturated.mp3", saturated, sr)
+                shutil.move("saturated.mp3", folder_select + "/" + filename + ".mp3")
+                sg.popup("File saved successfuly to " + folder_select)
+            except:
+                sg.popup("Error saving sound.")
+                try:
+                    os.remove("saturated.mp3")
+                except:
+                    pass
+        elif number_of_crossovers == 2:
+            try:
+                crossovers = [int(values["-SATURATION_CROSSOVER_ONE-"]), int(values["-SATURATION_CROSSOVER_TWO-"])]
+                drives = [values["-SATURATION_DRIVE_ONE-"], values["-SATURATION_DRIVE_TWO-"], values["-SATURATION_DRIVE_THREE-"]]
+                saturated = process_multi_band(audio, fs=sr, crossovers=crossovers, drives=drives)
+                sf.write("saturated.mp3", saturated, sr)
+                shutil.move("saturated.mp3", folder_select + "/" + filename + ".mp3")
+                sg.popup("File saved successfully to " + folder_select)
+            except:
+                sg.popup("Error saving sound.")
+                try:
+                    os.remove("saturated.mp3")
+                except:
+                    pass
+        elif number_of_crossovers == 3:
+            try:
+                crossovers = [int(values["-SATURATION_CROSSOVER_ONE-"]), int(values["-SATURATION_CROSSOVER_TWO-"]), int(values["-SATURATION_CROSSOVER_THREE-"])]
+                drives = [values["-SATURATION_DRIVE_ONE-"], values["-SATURATION_DRIVE_TWO-"], values["-SATURATION_DRIVE_THREE-"], values["-SATURATION_DRIVE_FOUR-"]]
+                saturated = process_multi_band(audio, fs=sr, crossovers=crossovers, drives=drives)
+                sf.write("saturated.mp3", saturated, sr)
+                shutil.move("saturated.mp3", folder_select + "/" + filename + ".mp3")
+                sg.popup("File saved successfully to " + folder_select)
+            except:
+                sg.popup("Error saving sound.")
+                try:
+                    os.remove("saturated.mp3")
+                except:
+                    pass
+        elif number_of_crossovers == 4:
+            try:
+                crossovers = [int(values["-SATURATION_CROSSOVER_ONE-"]), int(values["-SATURATION_CROSSOVER_TWO-"]), int(values["-SATURATION_CROSSOVER_THREE-"]), int(values["-SATURATION_CROSSOVER_FOUR-"])]
+                drives = [values["-SATURATION_DRIVE_ONE-"], values["-SATURATION_DRIVE_TWO-"], values["-SATURATION_DRIVE_THREE-"], values["-SATURATION_DRIVE_FOUR-"], values["-SATURATION_DRIVE_FIVE-"]]
+                saturated = process_multi_band(audio, fs=sr, crossovers=crossovers, drives=drives)
+                sf.write("saturated.mp3", saturated, sr)
+                shutil.move("saturated.mp3", folder_select + "/" + filename + ".mp3")
+                sg.popup("File saved successfully to " + folder_select)
+            except:
+                sg.popup("Error saving sound.")
+                try:
+                    os.remove("saturated.mp3")
+                except:
+                    pass
+        
 
 window.close()
