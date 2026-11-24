@@ -184,21 +184,25 @@ while True:
                 pass
     elif event == "-SAVE_DISTORTION-":
         try:
-            distortion_save_folder = values["-DISTORTION_SAVE_FOLDER-"]
-            distortion_filename = values["-DISTORTION_FILENAME-"]
+            folder_select = values["-DISTORTION_SAVE_FOLDER-"]
+            filename = values["-DISTORTION_FILENAME-"]
             distortion_type = values["-DISTORTION_TYPE-"]
             gain = values["-GAIN_DISTORTION-"]
             mix = values["-MIX_DISTORTION-"]
             if distortion_type == "Fuzz":
                 distorted_audio = fuzz_distortion(audio, gain=gain, threshold=0.2, mix=mix)
-            if distortion_type == "Wavefold":
+            elif distortion_type == "Wavefold":
                 distorted_audio = wavefold_distortion(audio, gain=gain, mix=mix)
-            if distortion_type == "Bitcrush":
+            elif distortion_type == "Bitcrush":
                 distorted_audio = bitcrush_distortion(audio, bits=6, mix=mix)
-            if distortion_type == "Chebyshev":
+            elif distortion_type == "Chebyshev":
                 distorted_audio = chebyshev_fold_distortion(audio, gain=gain, n=3, mix=mix)
-            sf.write("distorted.mp3", distorted_audio, sr)
-            shutil.move("distorted.mp3", distortion_save_folder + "/" + distortion_filename + ".mp3")
+            if os.path.isfile(folder_select + "/" + filename + ".mp3") == False:
+                sf.write("distorted.mp3", distorted_audio, sr)
+                shutil.move("distorted.mp3", folder_select + "/" + filename + ".mp3")
+                sg.popup("File saved successfully to " + folder_select)
+            else:
+                sg.popup("File already exists, delete file or try a different name.")
         except:
             sg.popup("Error saving file.")
             try:
@@ -227,8 +231,8 @@ while True:
                 pass
     elif event == "-SAVE_RESONANCE-":
         try:
-            resonance_save_folder = values["-RESONANCE_FOLDER_SELECT-"]
-            resonance_filename = values["-RESONANCE_FILENAME-"]
+            folder_select = values["-RESONANCE_FOLDER_SELECT-"]
+            filename = values["-RESONANCE_FILENAME-"]
             filter_type = values["-FILTER_TYPE_RESONANCE-"]
             cutoff_frequency = values["-CUTOFF_FREQUENCY_RESONANCE-"]
             resonance = values["-RESONANCE-"]
@@ -236,9 +240,13 @@ while True:
             if filter_type == "Lowpass":
                 resonated_audio = filter(audio, sr, cutoff=cutoff_frequency, resonance=resonance, q=qfactor, filter_type="lowpass")
             elif filter_type == "Bandpass":
-                resonated_audio = filter(audio, sr, cutoff=cutoff_frequency, resonance=resonance, q=qfactor, filter_type="bandpass")
-            sf.write("resonated.mp3", resonated_audio, sr)
-            shutil.move("resonated.mp3", resonance_save_folder + "/" + resonance_filename + ".mp3")
+                resonated_audio = filter(audio, sample_rate=sr, cutoff=cutoff_frequency, resonance=resonance, q=qfactor, filter_type="bandpass")
+            if os.path.file(folder_select + "/" + filename + ".mp3") == False:
+                sf.write("resonated.mp3", resonated_audio, sr)
+                shutil.move("resonated.mp3", folder_select + "/" + filename + ".mp3")
+                sg.popup("File saved successfully to " + folder_select)
+            else:
+                sg.popup("File already exists, delete file or try a different name.")
         except:
             sg.popup("Error saving file.")
             try:
@@ -269,16 +277,20 @@ while True:
     elif event == "-VOCODER_SAVE-":
         try:
             sf.write("temp.wav", audio, sr)
-            vocoder_save_folder = values["-VOCODER_FOLDER_SELECT-"]
-            vocoder_filename = values["-VOCODER_FILENAME-"]
+            folder_select = values["-VOCODER_FOLDER_SELECT-"]
+            filename = values["-VOCODER_FILENAME-"]
             carrier_type = values["-CARRIER_TYPE_VOCODER-"]
             number_of_bands = int(values["-NUM_BANDS_VOCODER-"])
             frequency_range_low = int(values["-FREQUENCY_RANGE_LOW_VOCODER-"])
             frequency_range_high = int(values["-FREQUENCY_RANGE_HIGH_VOCODER-"])
             carrier_frequency = values["-CARRIER_FREQUENCY_VOCODER-"]
             vocoded, sr = vocoder(carrier=None, modulator="temp.wav", carrier_type=carrier_type, carrier_freq=carrier_frequency, n_filters=number_of_bands, freq_range=(frequency_range_low, frequency_range_high))
-            sf.write("vocoded.mp3", vocoded, sr)
-            shutil.move("vocoded.mp3", vocoder_save_folder + "/" + vocoder_filename + ".mp3")
+            if os.path.isfile(folder_select + "/" + filename + ".mp3") == False:
+                sf.write("vocoded.mp3", vocoded, sr)
+                shutil.move("vocoded.mp3", folder_select + "/" + filename + ".mp3")
+                sg.popup("File successfully saved to " + folder_select)
+            else:
+                sg.popup("File already exists, delete file or try a different name.")
             os.remove("temp.wav")
         except:
             sg.popup("Error saving file.")
@@ -306,15 +318,19 @@ while True:
                 pass        
     elif event == "-PHASER_SAVE-":
         try:
-            phaser_save_folder = values["-PHASER_FOLDER_SELECT-"]
-            phaser_filename = values["-PHASER_FILENAME-"]
+            folder_select = values["-PHASER_FOLDER_SELECT-"]
+            filename = values["-PHASER_FILENAME-"]
             phaser_rate = values["-PHASER_RATE-"]
             phaser_depth = values["-PHASER_DEPTH-"]
             phaser_stages = int(values["-PHASER_STAGES-"])
             phaser_mix = values["-PHASER_MIX-"]
             phased = phaser_flanger(audio, sr, phaser_rate=phaser_rate, phaser_depth=phaser_depth, phaser_stages=phaser_stages, phaser_mix=phaser_mix, wet_mix=0.0, flanger_mix=0.0)
-            sf.write("phased.mp3", phased, sr)
-            shutil.move("phased.mp3", phaser_save_folder + "/" + phaser_filename + ".mp3")
+            if os.path.isfile(folder_select + "/" + filename + ".mp3") == False:
+                sf.write("phased.mp3", phased, sr)
+                shutil.move("phased.mp3", folder_select + "/" + filename + ".mp3")
+                sg.popup("File saved successfully to " + folder_select)
+            else:
+                sg.popup("File already exists, delete file or try a different name.")
         except:
             sg.popup("Error saving file.")
             try:
@@ -340,15 +356,19 @@ while True:
                 pass
     elif event == "-FLANGER_SAVE-":
         try:
-            flanger_save_folder = values["-FLANGER_FOLDER_SELECT-"]
-            flanger_filename = values["-FLANGER_FILENAME-"]
+            folder_select = values["-FLANGER_FOLDER_SELECT-"]
+            filename = values["-FLANGER_FILENAME-"]
             flanger_rate = values["-FLANGER_RATE-"]
             flanger_delay_base = values["-FLANGER_DELAY_BASE-"]
             flanger_delay_depth = values["-FLANGER_DELAY_DEPTH-"]
             flanger_mix = values["-FLANGER_MIX-"]
             flanged = phaser_flanger(audio, sr, flanger_rate=flanger_rate, flanger_delay_base=flanger_delay_base, flanger_delay_depth=flanger_delay_depth, flanger_mix=flanger_mix, phaser_mix=0.0)
-            sf.write("flanged.mp3", flanged, sr)
-            shutil.move("flanged.mp3", flanger_save_folder + "/" + flanger_filename + ".mp3")
+            if os.path.isfile(folder_select + "/" + filename + ".mp3") == False:
+                sf.write("flanged.mp3", flanged, sr)
+                shutil.move("flanged.mp3", folder_select + "/" + filename + ".mp3")
+                sg.popup("File saved successfully to " + folder_select)
+            else:
+                sg.popup("File already exists, delete file or try a different name.")
         except:
             sg.popup("Error saving file.")
             try:
@@ -375,16 +395,21 @@ while True:
                 pass
     elif event == "-CHORUS_SAVE-":
         try:
-            chorus_folder_select = values["-CHORUS_FOLDER_SELECT-"]
-            chorus_filename = values["-CHORUS_FILENAME-"]
+            folder_select = values["-CHORUS_FOLDER_SELECT-"]
+            filename = values["-CHORUS_FILENAME-"]
             chorus_modulation_amount = values["-CHORUS_MODULATION_AMOUNT-"]
             chorus_speed = values["-CHORUS_SPEED-"]
             chorus_numberof_clones = int(values["-CHORUS_NUMBEROF_CLONES-"])
             chorus_delay = values["-CHORUS_DELAY-"]
             chorus_mix = values["-CHORUS_MIX-"]
             chorused = chorus(audio, sr, mix=chorus_mix, amount=chorus_modulation_amount, speed=chorus_speed, n_clones=chorus_numberof_clones, delay=chorus_delay)
-            sf.write("chorused.mp3", chorused, sr)
-            shutil.move("chorused.mp3", chorus_folder_select + "/" + chorus_filename + ".mp3")
+            if os.path.isfile(folder_select + "/" + filename + ".mp3") == False:
+                sf.write("chorused.mp3", chorused, sr)
+                shutil.move("chorused.mp3", folder_select + "/" + filename + ".mp3")
+                sg.popup("File saved successfully to " + folder_select
+                         )
+            else:
+                sg.popup("File already exists, delete file or try a different name.")
         except:
             sg.popup("Error saving file.")
             try:
@@ -417,9 +442,12 @@ while True:
             feedback = values["-DELAY_FEEDBACK-"]
             mix = values["-DELAY_MIX_DIGITAL-"]
             delayed = delay(audio, sr, delay_time=delay_time, feedback=feedback, mix=mix, mode=mode)
-            sf.write("digital_delay.mp3", delayed, sr)
-            shutil.move("digital_delay.mp3", folder_select + "/" + filename + ".mp3")
-            sg.popup("File successfully saved to " + folder_select)
+            if os.path.isfile(folder_select + "/" + filename + ".mp3") == False:
+                sf.write("digital_delay.mp3", delayed, sr)
+                shutil.move("digital_delay.mp3", folder_select + "/" + filename + ".mp3")
+                sg.popup("File successfully saved to " + folder_select)
+            else:
+                sg.popup("File already exists, delete file or try a different name.")
         except:
             sg.popup("Error saving file.")
             try:
