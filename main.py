@@ -97,14 +97,18 @@ while True:
             mix = values["-MIX_DISTORTION-"]
             if distortion_type == "Fuzz":
                 distorted_audio = fuzz_distortion(audio, gain=gain, threshold=0.2, mix=mix)
-            if distortion_type == "Wavefold":
+            elif distortion_type == "Wavefold":
                 distorted_audio = wavefold_distortion(audio, gain=gain, mix=mix)
-            if distortion_type == "Bitcrush":
+            elif distortion_type == "Bitcrush":
                 distorted_audio = bitcrush_distortion(audio, bits=6, mix=mix)
-            if distortion_type == "Chebyshev":
+            elif distortion_type == "Chebyshev":
                 distorted_audio = chebyshev_fold_distortion(audio, gain=gain, n=3, mix=mix)
-            sf.write("distorted.mp3", distorted_audio, sr)
-            shutil.move("distorted.mp3", distortion_save_folder + "/" + distortion_filename + ".mp3")
+            if os.path.isfile(distortion_save_folder + "/" + distortion_filename + ".mp3") == False:
+                sf.write("distorted.mp3", distorted_audio, sr)
+                shutil.move("distorted.mp3", distortion_save_folder + "/" + distortion_filename + ".mp3")
+                sg.popup("File saved successfully to " + distortion_save_folder)
+            else:
+                sg.popup("File already exists, delete file or try a different name.")
         except:
             sg.popup("Error saving file.")
             try:
@@ -143,8 +147,12 @@ while True:
                 resonated_audio = filter(audio, sample_rate=sr, cutoff=cutoff_frequency, resonance=resonance, q=qfactor, filter_type="lowpass")
             elif filter_type == "Bandpass":
                 resonated_audio = filter(audio, sample_rate=sr, cutoff=cutoff_frequency, resonance=resonance, q=qfactor, filter_type="bandpass")
-            sf.write("resonated.mp3", resonated_audio, sr)
-            shutil.move("resonated.mp3", resonance_save_folder + "/" + resonance_filename + ".mp3")
+            if os.path.file(resonance_save_folder + "/" + resonance_filename + ".mp3") == False:
+                sf.write("resonated.mp3", resonated_audio, sr)
+                shutil.move("resonated.mp3", resonance_save_folder + "/" + resonance_filename + ".mp3")
+                sg.popup("File saved successfully to " + resonance_save_folder)
+            else:
+                sg.popup("File already exists, delete file or try a different name.")
         except:
             sg.popup("Error saving file.")
             try:
@@ -183,8 +191,12 @@ while True:
             frequency_range_high = int(values["-FREQUENCY_RANGE_HIGH_VOCODER-"])
             carrier_frequency = values["-CARRIER_FREQUENCY_VOCODER-"]
             vocoded, sr = vocoder(carrier=None, modulator="temp.wav", carrier_type=carrier_type, carrier_freq=carrier_frequency, n_filters=number_of_bands, freq_range=(frequency_range_low, frequency_range_high))
-            sf.write("vocoded.mp3", vocoded, sr)
-            shutil.move("vocoded.mp3", vocoder_save_folder + "/" + vocoder_filename + ".mp3")
+            if os.path.isfile(vocoder_save_folder + "/" + vocoder_filename + ".mp3") == False:
+                sf.write("vocoded.mp3", vocoded, sr)
+                shutil.move("vocoded.mp3", vocoder_save_folder + "/" + vocoder_filename + ".mp3")
+                sg.popup("File successfully saved to " + vocoder_save_folder)
+            else:
+                sg.popup("File already exists, delete file or try a different name.")
             os.remove("temp.wav")
         except:
             sg.popup("Error saving file.")
