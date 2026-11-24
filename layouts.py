@@ -175,7 +175,7 @@ phaser_layout = [
         ),
     ],
     [
-        sg.Text("Phaser Depth"),
+        sg.Text("Depth"),
         sg.Slider(
             range=(0.0,1.0),
             default_value=0.8,
@@ -186,7 +186,7 @@ phaser_layout = [
         ),
     ],
     [
-        sg.Text("Phaser Stages"),
+        sg.Text("Stages"),
         sg.Slider(
             range=(1,12),
             default_value=4,
@@ -197,7 +197,18 @@ phaser_layout = [
         ),
     ],
     [
-        sg.Text("Phaser Mix"),
+        sg.Text("Wet Mix"),
+        sg.Slider(
+            range=(0.0,1.0),
+            default_value=0.5,
+            resolution=0.1,
+            orientation="h",
+            size=(20,15),
+            key="-PHASER_WET_MIX-"
+        ),
+    ],
+    [
+        sg.Text("Mix"),
         sg.Slider(
             range=(0.0,1.0),
             default_value=0.7,
@@ -209,7 +220,7 @@ phaser_layout = [
     ],
     [
         sg.Button("Preview", key="-PHASER_PREVIEW-"),
-        sg.In(size=(25, 1), enable_events=True, key="-PHASER_FOLDER_SELECT-", placeholder="Select Folder"),
+        sg.In(size=(25, 1), enable_events=True, key="-PHASER_FOLDER_SELECT-"),
         sg.FolderBrowse(button_text="Select Save Folder"),
     ],
     [
@@ -221,38 +232,441 @@ phaser_layout = [
 
 flanger_layout = [
     [
-        
-    ]
+        sg.Text("Flanger Rate"),
+        sg.Slider(
+            range=(0.0,1.0),
+            default_value=0.2,
+            resolution=0.1,
+            orientation="h",
+            size=(20,15),
+            key="-FLANGER_RATE-",
+        ),
+    ],
+    [
+        sg.Text("Delay Base"),
+        sg.Slider(
+            range=(0.0,1.0),
+            default_value=0.005,
+            resolution=0.005,
+            orientation="h",
+            size=(20,15),
+            key="-FLANGER_DELAY_BASE-"
+        ),
+    ],
+    [
+        sg.Text("Delay Depth"),
+        sg.Slider(
+            range=(0.0,1),
+            default_value=0.005,
+            resolution=0.005,
+            orientation="h",
+            size=(20,15),
+            key="-FLANGER_DELAY_DEPTH-",
+        ),
+    ],
+    [
+        sg.Text("Mix"),
+        sg.Slider(
+            range=(0.0,1.0),
+            default_value=0.7,
+            resolution=0.1,
+            orientation="h",
+            size=(20,15),
+            key="-FLANGER_MIX-",
+        ),
+    ],
+    [
+        sg.Button("Preview", key="-FLANGER_PREVIEW-"),
+        sg.In(size=(25, 1), enable_events=True, key="-FLANGER_FOLDER_SELECT-"),
+        sg.FolderBrowse(button_text="Select Save Folder"),
+    ],
+    [
+        sg.Button("Save", key="-FLANGER_SAVE-"),
+        sg.In(size=(15,1), enable_events=True, key="-FLANGER_FILENAME-", placeholder="Filename"),
+    ],
 ]
 
 chorus_layout = [
     [
-        
-    ]
+        sg.Text("Pitch Modulation Amount"),
+        sg.Slider(
+            range=(0.0,3.0),
+            default_value=1.0,
+            resolution=0.1,
+            orientation="h",
+            size=(20,15),
+            key="-CHORUS_MODULATION_AMOUNT-",
+        ),
+    ],
+    [
+        sg.Text("Speed"),
+        sg.Slider(
+            range=(0.1,2.0),
+            default_value=0.1,
+            resolution=0.1,
+            orientation="h",
+            size=(20,15),
+            key="-CHORUS_SPEED-",
+        ),
+    ],
+    [
+        sg.Text("Number of Clones"),
+        sg.Slider(
+            range=(0,16),
+            default_value=4,
+            resolution=1,
+            orientation="h",
+            size=(20,15),
+            key="-CHORUS_NUMBEROF_CLONES-",
+        ),
+    ],
+    [
+        sg.Text("Delay"),
+        sg.Slider(
+            range=(0.0,1.0),
+            default_value=0.0,
+            resolution=0.02,
+            orientation="h",
+            size=(20,15),
+            key="-CHORUS_DELAY-",
+        ),
+    ],
+    [
+        sg.Text("Mix"),
+        sg.Slider(
+            range=(0.0,1.0),
+            default_value=0.5,
+            resolution=0.1,
+            orientation="h",
+            size=(20,15),
+            key="-CHORUS_MIX-",
+        ),
+    ],
+    [
+        sg.Button("Preview", key="-CHORUS_PREVIEW-"),
+        sg.In(size=(25, 1), enable_events=True, key="-CHORUS_FOLDER_SELECT-"),
+        sg.FolderBrowse(button_text="Select Save Folder"),
+    ],
+    [
+        sg.Button("Save", key="-CHORUS_SAVE-"),
+        sg.In(size=(15,1), enable_events=True, key="-CHORUS_FILENAME-", placeholder="Filename"),
+    ],
+]
+
+delay_layout_digital = [
+    [
+        sg.Text("Mix"),
+        sg.Slider(
+            range=(0.0,1.0),
+            default_value=0.5,
+            resolution=0.1,
+            orientation="h",
+            size=(20,15),
+            key="-DELAY_MIX_DIGITAL-",
+        ),
+    ],
+    [
+        sg.Button("Preview", key="-DELAY_PREVIEW_DIGITAL-"),
+        sg.In(size=(25,1), enable_events=True, key="-DELAY_DIGITAL_FOLDER_SELECT-"),
+        sg.FolderBrowse(button_text="Select Save Folder"),
+    ],
+    [
+        sg.Button("Save", key="-DELAY_SAVE_DIGITAL-"),
+        sg.In(size=(15,1), enable_events=True, key="-DELAY_DIGITAL_FILENAME-", placeholder="Filename"),
+    ],
+]
+
+delay_layout_analog = [
+    [
+        sg.Text("Low-pass Cutoff"),
+        sg.Slider(
+            range=(0,8000),
+            default_value=3000,
+            resolution=100,
+            orientation="h",
+            size=(20,15),
+            key="-DELAY_LOWPASS_CUTOFF-",
+        ),
+    ],
+    [
+        sg.Text("Flutter Depth"),
+        sg.Slider(
+            range=(0.0,1.0),
+            default_value=0.005,
+            resolution=0.005,
+            orientation="h",
+            size=(20,15),
+            key="-DELAY_FLUTTER_DEPTH-",
+        ),
+    ],
+    [
+        sg.Text("Pitch Drift Depth"),
+        sg.Slider(
+            range=(0.0,1.0),
+            default_value=0.1,
+            resolution=0.05,
+            orientation="h",
+            size=(20,15),
+            key="-DELAY_PITCH_DRIFT_DEPTH-",
+        ),
+    ],
+    [
+        sg.Text("Drive"),
+        sg.Slider(
+            range=(0.0,4.0),
+            default_value=1.0,
+            resolution=0.1,
+            orientation="h",
+            size=(20,15),
+            key="-DELAY_DRIVE-",
+        ),
+    ],
+    [
+        sg.Text("Mix"),
+        sg.Slider(
+            range=(0.0,1.0),
+            default_value=0.5,
+            resolution=0.1,
+            orientation="h",
+            size=(20,15),
+            key="-DELAY_MIX_ANALOG-",
+        ),
+    ],
+    [
+        sg.Button("Preview", key="-DELAY_PREVIEW_ANALOG-"),
+        sg.In(size=(25,1), enable_events=True, key="-DELAY_ANALOG_FOLDER_SELECT-"),
+        sg.FolderBrowse(button_text="Select Save Folder"),
+    ],
+    [
+        sg.Button("Save", key="-DELAY_SAVE_ANALOG-"),
+        sg.In(size=(15,1), enable_events=True, key="-DELAY_ANALOG_FILENAME-", placeholder="Filename"),
+    ],
 ]
 
 delay_layout = [
     [
-        
-    ]
+        sg.Text("Mode"),
+        sg.Combo(
+            ["digital", "analog"],
+            default_value="digital",
+            enable_events=True,
+            key="-DELAY_MODE-",
+        ),
+    ],
+    [
+        sg.Text("Delay Time"),
+        sg.Slider(
+            range=(0.0,3.0),
+            default_value=0.1,
+            resolution=0.1,
+            orientation="h",
+            size=(20,15),
+            key="-DELAY_TIME-",
+        ),
+    ],
+    [
+        sg.Text("Feedback"),
+        sg.Slider(
+            range=(0.0,1.0),
+            default_value=0.5,
+            resolution=0.1,
+            orientation="h",
+            size=(20,15),
+            key="-DELAY_FEEDBACK-",
+        ),
+    ],
+    [
+        sg.Column(delay_layout_digital, key="-DELAY_LAYOUT_DIGITAL-", visible=False),
+        sg.Column(delay_layout_analog, key="-DELAY_LAYOUT_ANALOG-", visible=False),
+    ],
 ]
 
 glitch_layout = [
     [
-        
-    ]
+        sg.Text("Number of Segments"),
+        sg.Combo(
+            [16, 32, 64, 128],
+            default_value=16,
+            enable_events=True,
+            key="-GLITCH_NUMBER_OF_SEGMENTS-"
+        ),
+    ],
+    [
+        sg.Text("Intensity"),
+        sg.Slider(
+            range=(0.0,1.0),
+            default_value=0.5,
+            resolution=0.1,
+            orientation="h",
+            size=(20,15),
+            key="-GLITCH_INTENSITY-",
+        ),
+    ],
+    [
+        sg.Text("Loop Length"),
+        sg.Slider(
+            range=(1.0,10.0),
+            default_value=2.0,
+            resolution=0.1,
+            orientation="h",
+            size=(20,15),
+            key="-GLITCH_LOOP_LENGTH-"
+        ),
+    ],
+    [
+        sg.Button("Preview", key="-GLITCH_PREVIEW-"),
+        sg.In(size=(25,1), enable_events=True, key="-GLITCH_FOLDER_SELECT-"),
+        sg.FolderBrowse(button_text="Select Save Folder"),
+    ],
+    [
+        sg.Button("Save", key="-GLITCH_SAVE-"),
+        sg.In(size=(15,1), enable_events=True, key="-GLITCH_FILENAME-", placeholder="Filename"),
+    ],
+]
+
+saturation_crossover_layout = [
+    [
+        sg.Text("Crossover (Hz)"),
+    ],
+    [
+        sg.Slider(
+            range=(100, 8000),
+            default_value=100,
+            resolution=100,
+            orientation="h",
+            size=(20,15),
+            key="-SATURATION_CROSSOVER_ONE-",
+        ),
+    ],
+    [
+        sg.pin(
+            sg.Slider(
+                range=(100, 8000),
+                default_value=100,
+                resolution=100,
+                orientation="h",
+                size=(20,15),
+                key="-SATURATION_CROSSOVER_TWO-",
+                visible=False,
+            ),
+        ),
+    ],
+    [
+        sg.pin(
+            sg.Slider(
+                range=(100, 8000),
+                default_value=100,
+                resolution=100,
+                orientation="h",
+                size=(20,15),
+                key="-SATURATION_CROSSOVER_THREE-",
+                visible=False,
+            ),
+        ),
+    ],
+    [
+        sg.pin(
+            sg.Slider(
+                range=(100, 8000),
+                default_value=100,
+                resolution=100,
+                orientation="h",
+                size=(20,15),
+                key="-SATURATION_CROSSOVER_FOUR-",
+                visible=False,
+            ),
+        ),
+    ],
+]
+
+saturation_drive_layout = [
+    [
+        sg.Text("Drives"),
+    ],
+    [
+        sg.Slider(
+            range=(1.0,4.),
+            default_value=1.0,
+            resolution=0.1,
+            orientation="h",
+            size=(20,15),
+            key="-SATURATION_DRIVE_ONE-",
+        ),
+    ],
+    [
+        sg.Slider(
+            range=(1.0,4.),
+            default_value=1.0,
+            resolution=0.1,
+            orientation="h",
+            size=(20,15),
+            key="-SATURATION_DRIVE_TWO-",
+        ),
+    ],
+    [
+        sg.pin(
+            sg.Slider(
+                range=(1.0,4.),
+                default_value=1.0,
+                resolution=0.1,
+                orientation="h",
+                size=(20,15),
+                key="-SATURATION_DRIVE_THREE-",
+                visible=False,
+            ),
+        ),
+    ],
+    [
+        sg.pin(
+            sg.Slider(
+                range=(1.0,4.),
+                default_value=1.0,
+                resolution=0.1,
+                orientation="h",
+                size=(20,15),
+                key="-SATURATION_DRIVE_FOUR-",
+                visible=False,
+            ),
+        ),
+    ],
+    [
+        sg.pin(
+            sg.Slider(
+                range=(1.0,4.),
+                default_value=1.0,
+                resolution=0.1,
+                orientation="h",
+                size=(20,15),
+                key="-SATURATION_DRIVE_FIVE-",
+                visible=False,
+            ),
+        ),
+    ],
 ]
 
 multi_band_saturation_layout = [
     [
-        
-    ]
-]
-
-negative_audio_layout = [
+        sg.Text("Number of Crossovers"),
+        sg.Combo(
+            [1,2,3,4],
+            default_value=1,
+            enable_events=True,
+            key="-SATURATION_NUMBER_OF_CROSSOVERS-",
+        ),
+    ],
     [
-        
-    ]
+        sg.Column(saturation_crossover_layout, key="-SATURATION_CROSSOVER_LAYOUT-"),
+        sg.Column(saturation_drive_layout, key="-SATURATION_DRIVE_LAYOUT-"),
+    ],
+    [
+        sg.Button("Preview", key="-SATURATION_PREVIEW-"),
+        sg.In(size=(25,1), enable_events=True, key="-SATURATION_FOLDER_SELECT-"),
+        sg.FolderBrowse(button_text="Select Save Folder"),
+    ],
+    [
+        sg.Button("Save", key="-SATURATION_SAVE-"),
+        sg.In(size=(15,1), enable_events=True, key="-SATURATION_FILENAME-", placeholder="Filename"),
+    ],
 ]
 
 file_select = [
@@ -265,7 +679,7 @@ file_select = [
     [
       sg.Text("Modifier Type"),
       sg.Combo(
-            ["Distortion", "Resonance", "Vocoder", "Phaser", "Flanger", "Chorus", "Delay", "Glitch", "Multi-Band Saturation", "Negative Audio", "Sidechain", "Compressor"],
+            ["Distortion", "Resonance", "Vocoder", "Phaser", "Flanger", "Chorus", "Delay", "Glitch", "Multi-Band Saturation"],
             enable_events=True,
             key="-MODIFIER_TYPE-",
       )  
@@ -275,5 +689,10 @@ file_select = [
         sg.Column(resonance_layout, key="-RESONANCE_LAYOUT-", visible=False),
         sg.Column(vocoder_layout, key="-VOCODER_LAYOUT-", visible=False),
         sg.Column(phaser_layout, key="-PHASER_LAYOUT-", visible=False),
+        sg.Column(flanger_layout, key="-FLANGER_LAYOUT-", visible=False),
+        sg.Column(chorus_layout, key="-CHORUS_LAYOUT-", visible=False),
+        sg.Column(delay_layout, key="-DELAY_LAYOUT-", visible=False),
+        sg.Column(glitch_layout, key="-GLITCH_LAYOUT-", visible=False),
+        sg.Column(multi_band_saturation_layout, key="-MULTI_BAND_SATURATION_LAYOUT-", visible=False),
     ],
 ]

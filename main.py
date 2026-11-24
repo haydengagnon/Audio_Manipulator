@@ -6,13 +6,16 @@ from audio_dsp.effects import (
     filter,
     vocoder,
     phaser_flanger,
+    delay,
 )
+from audio_dsp.effects.random_chorus import chorus
+from audio_dsp.effects.glitch import glitch
+from audio_dsp.effects.multi_band_saturation import process_multi_band
 import PySimpleGUI as sg
 import os
 import soundfile as sf
 import playsound as ps
 import layouts
-import numpy as np
 import shutil
 
 
@@ -31,7 +34,11 @@ while True:
     if event == "Exit" or event == sg.WIN_CLOSED:
         try:
             os.remove("temp.wav")
-            break
+            try:
+                os.remove("temp.mp3")
+                break
+            except:
+                break
         except:
             break
 
@@ -56,6 +63,29 @@ while True:
             window["-VOCODER_LAYOUT-"].update(visible=True)
         elif modifier_type == "Phaser":
             window["-PHASER_LAYOUT-"].update(visible=True)
+        elif modifier_type == "Flanger":
+            window["-FLANGER_LAYOUT-"].update(visible=True)
+        elif modifier_type == "Chorus":
+            window["-CHORUS_LAYOUT-"].update(visible=True)
+        elif modifier_type == "Delay":
+            window["-DELAY_LAYOUT-"].update(visible=True)
+            window["-DELAY_LAYOUT_DIGITAL-"].update(visible=True)
+            window["-DELAY_LAYOUT_ANALOG-"].update(visible=False)
+            window["-DELAY_MODE-"].update(value="digital")
+        elif modifier_type == "Glitch":
+            window["-GLITCH_LAYOUT-"].update(visible=True)
+        elif modifier_type == "Multi-Band Saturation":
+            window["-MULTI_BAND_SATURATION_LAYOUT-"].update(visible=True)
+            window["-SATURATION_NUMBER_OF_CROSSOVERS-"].update(value=1)
+            window["-SATURATION_CROSSOVER_ONE-"].update(visible=True)
+            window["-SATURATION_CROSSOVER_TWO-"].update(visible=False)
+            window["-SATURATION_CROSSOVER_THREE-"].update(visible=False)
+            window["-SATURATION_CROSSOVER_FOUR-"].update(visible=False)
+            window["-SATURATION_DRIVE_ONE-"].update(visible=True)
+            window["-SATURATION_DRIVE_TWO-"].update(visible=True)
+            window["-SATURATION_DRIVE_THREE-"].update(visible=False)
+            window["-SATURATION_DRIVE_FOUR-"].update(visible=False)
+            window["-SATURATION_DRIVE_FIVE-"].update(visible=False)
         
         if modifier_type != "Distortion":
             window["-DISTORTION_LAYOUT-"].update(visible=False)
@@ -65,6 +95,70 @@ while True:
             window["-VOCODER_LAYOUT-"].update(visible=False)
         if modifier_type != "Phaser":
             window["-PHASER_LAYOUT-"].update(visible=False)
+        if modifier_type != "Flanger":
+            window["-FLANGER_LAYOUT-"].update(visible=False)
+        if modifier_type != "Chorus":
+            window["-CHORUS_LAYOUT-"].update(visible=False)
+        if modifier_type != "Delay":
+            window["-DELAY_LAYOUT-"].update(visible=False)
+            window["-DELAY_LAYOUT_DIGITAL-"].update(visible=False)
+            window["-DELAY_LAYOUT_ANALOG-"].update(visible=False)
+        if modifier_type != "Glitch":
+            window["-GLITCH_LAYOUT-"].update(visible=False)
+        if modifier_type != "Multi-Band Saturation":
+            window["-MULTI_BAND_SATURATION_LAYOUT-"].update(visible=False)
+    
+    elif event == "-DELAY_MODE-":
+        delay_mode = values["-DELAY_MODE-"]
+        if delay_mode == "digital":
+            window["-DELAY_LAYOUT_ANALOG-"].update(visible=False)
+            window["-DELAY_LAYOUT_DIGITAL-"].update(visible=True)
+        elif delay_mode == "analog":
+            window["-DELAY_LAYOUT_DIGITAL-"].update(visible=False)
+            window["-DELAY_LAYOUT_ANALOG-"].update(visible=True)
+    
+    elif event == "-SATURATION_NUMBER_OF_CROSSOVERS-":
+        number_of_crossovers = values["-SATURATION_NUMBER_OF_CROSSOVERS-"]
+        if number_of_crossovers == 1:
+            window["-SATURATION_CROSSOVER_ONE-"].update(visible=True)
+            window["-SATURATION_CROSSOVER_TWO-"].update(visible=False)
+            window["-SATURATION_CROSSOVER_THREE-"].update(visible=False)
+            window["-SATURATION_CROSSOVER_FOUR-"].update(visible=False)
+            window["-SATURATION_DRIVE_ONE-"].update(visible=True)
+            window["-SATURATION_DRIVE_TWO-"].update(visible=True)
+            window["-SATURATION_DRIVE_THREE-"].update(visible=False)
+            window["-SATURATION_DRIVE_FOUR-"].update(visible=False)
+            window["-SATURATION_DRIVE_FIVE-"].update(visible=False)
+        elif number_of_crossovers == 2:
+            window["-SATURATION_CROSSOVER_ONE-"].update(visible=True)
+            window["-SATURATION_CROSSOVER_TWO-"].update(visible=True)
+            window["-SATURATION_CROSSOVER_THREE-"].update(visible=False)
+            window["-SATURATION_CROSSOVER_FOUR-"].update(visible=False)
+            window["-SATURATION_DRIVE_ONE-"].update(visible=True)
+            window["-SATURATION_DRIVE_TWO-"].update(visible=True)
+            window["-SATURATION_DRIVE_THREE-"].update(visible=True)
+            window["-SATURATION_DRIVE_FOUR-"].update(visible=False)
+            window["-SATURATION_DRIVE_FIVE-"].update(visible=False)
+        elif number_of_crossovers == 3:
+            window["-SATURATION_CROSSOVER_ONE-"].update(visible=True)
+            window["-SATURATION_CROSSOVER_TWO-"].update(visible=True)
+            window["-SATURATION_CROSSOVER_THREE-"].update(visible=True)
+            window["-SATURATION_CROSSOVER_FOUR-"].update(visible=False)
+            window["-SATURATION_DRIVE_ONE-"].update(visible=True)
+            window["-SATURATION_DRIVE_TWO-"].update(visible=True)
+            window["-SATURATION_DRIVE_THREE-"].update(visible=True)
+            window["-SATURATION_DRIVE_FOUR-"].update(visible=True)
+            window["-SATURATION_DRIVE_FIVE-"].update(visible=False)
+        elif number_of_crossovers == 4:
+            window["-SATURATION_CROSSOVER_ONE-"].update(visible=True)
+            window["-SATURATION_CROSSOVER_TWO-"].update(visible=True)
+            window["-SATURATION_CROSSOVER_THREE-"].update(visible=True)
+            window["-SATURATION_CROSSOVER_FOUR-"].update(visible=True)
+            window["-SATURATION_DRIVE_ONE-"].update(visible=True)
+            window["-SATURATION_DRIVE_TWO-"].update(visible=True)
+            window["-SATURATION_DRIVE_THREE-"].update(visible=True)
+            window["-SATURATION_DRIVE_FOUR-"].update(visible=True)
+            window["-SATURATION_DRIVE_FIVE-"].update(visible=True)
             
     elif event == "-PREVIEW_DISTORTION-":
         try:
@@ -90,8 +184,8 @@ while True:
                 pass
     elif event == "-SAVE_DISTORTION-":
         try:
-            distortion_save_folder = values["-DISTORTION_SAVE_FOLDER-"]
-            distortion_filename = values["-DISTORTION_FILENAME-"]
+            folder_select = values["-DISTORTION_SAVE_FOLDER-"]
+            filename = values["-DISTORTION_FILENAME-"]
             distortion_type = values["-DISTORTION_TYPE-"]
             gain = values["-GAIN_DISTORTION-"]
             mix = values["-MIX_DISTORTION-"]
@@ -103,10 +197,10 @@ while True:
                 distorted_audio = bitcrush_distortion(audio, bits=6, mix=mix)
             elif distortion_type == "Chebyshev":
                 distorted_audio = chebyshev_fold_distortion(audio, gain=gain, n=3, mix=mix)
-            if os.path.isfile(distortion_save_folder + "/" + distortion_filename + ".mp3") == False:
+            if os.path.isfile(folder_select + "/" + filename + ".mp3") == False:
                 sf.write("distorted.mp3", distorted_audio, sr)
-                shutil.move("distorted.mp3", distortion_save_folder + "/" + distortion_filename + ".mp3")
-                sg.popup("File saved successfully to " + distortion_save_folder)
+                shutil.move("distorted.mp3", folder_select + "/" + filename + ".mp3")
+                sg.popup("File saved successfully to " + folder_select)
             else:
                 sg.popup("File already exists, delete file or try a different name.")
         except:
@@ -123,9 +217,9 @@ while True:
             resonance = values["-RESONANCE-"]
             qfactor = values["-QFACTOR_RESONANCE-"]
             if filter_type == "Lowpass":
-                resonated_audio = filter(audio, sample_rate=sr, cutoff=cutoff_frequency, resonance=resonance, q=qfactor, filter_type="lowpass")
+                resonated_audio = filter(audio, sr, cutoff=cutoff_frequency, resonance=resonance, q=qfactor, filter_type="lowpass")
             elif filter_type == "Bandpass":
-                resonated_audio = filter(audio, sample_rate=sr, cutoff=cutoff_frequency, resonance=resonance, q=qfactor, filter_type="bandpass")
+                resonated_audio = filter(audio, sr, cutoff=cutoff_frequency, resonance=resonance, q=qfactor, filter_type="bandpass")
             sf.write("temp.mp3", resonated_audio, sr)
             ps.playsound("temp.mp3")
             os.remove("temp.mp3")
@@ -137,20 +231,20 @@ while True:
                 pass
     elif event == "-SAVE_RESONANCE-":
         try:
-            resonance_save_folder = values["-RESONANCE_FOLDER_SELECT-"]
-            resonance_filename = values["-RESONANCE_FILENAME-"]
+            folder_select = values["-RESONANCE_FOLDER_SELECT-"]
+            filename = values["-RESONANCE_FILENAME-"]
             filter_type = values["-FILTER_TYPE_RESONANCE-"]
             cutoff_frequency = values["-CUTOFF_FREQUENCY_RESONANCE-"]
             resonance = values["-RESONANCE-"]
             qfactor = values["-QFACTOR_RESONANCE-"]
             if filter_type == "Lowpass":
-                resonated_audio = filter(audio, sample_rate=sr, cutoff=cutoff_frequency, resonance=resonance, q=qfactor, filter_type="lowpass")
+                resonated_audio = filter(audio, sr, cutoff=cutoff_frequency, resonance=resonance, q=qfactor, filter_type="lowpass")
             elif filter_type == "Bandpass":
                 resonated_audio = filter(audio, sample_rate=sr, cutoff=cutoff_frequency, resonance=resonance, q=qfactor, filter_type="bandpass")
-            if os.path.file(resonance_save_folder + "/" + resonance_filename + ".mp3") == False:
+            if os.path.file(folder_select + "/" + filename + ".mp3") == False:
                 sf.write("resonated.mp3", resonated_audio, sr)
-                shutil.move("resonated.mp3", resonance_save_folder + "/" + resonance_filename + ".mp3")
-                sg.popup("File saved successfully to " + resonance_save_folder)
+                shutil.move("resonated.mp3", folder_select + "/" + filename + ".mp3")
+                sg.popup("File saved successfully to " + folder_select)
             else:
                 sg.popup("File already exists, delete file or try a different name.")
         except:
@@ -183,18 +277,18 @@ while True:
     elif event == "-VOCODER_SAVE-":
         try:
             sf.write("temp.wav", audio, sr)
-            vocoder_save_folder = values["-VOCODER_FOLDER_SELECT-"]
-            vocoder_filename = values["-VOCODER_FILENAME-"]
+            folder_select = values["-VOCODER_FOLDER_SELECT-"]
+            filename = values["-VOCODER_FILENAME-"]
             carrier_type = values["-CARRIER_TYPE_VOCODER-"]
             number_of_bands = int(values["-NUM_BANDS_VOCODER-"])
             frequency_range_low = int(values["-FREQUENCY_RANGE_LOW_VOCODER-"])
             frequency_range_high = int(values["-FREQUENCY_RANGE_HIGH_VOCODER-"])
             carrier_frequency = values["-CARRIER_FREQUENCY_VOCODER-"]
             vocoded, sr = vocoder(carrier=None, modulator="temp.wav", carrier_type=carrier_type, carrier_freq=carrier_frequency, n_filters=number_of_bands, freq_range=(frequency_range_low, frequency_range_high))
-            if os.path.isfile(vocoder_save_folder + "/" + vocoder_filename + ".mp3") == False:
+            if os.path.isfile(folder_select + "/" + filename + ".mp3") == False:
                 sf.write("vocoded.mp3", vocoded, sr)
-                shutil.move("vocoded.mp3", vocoder_save_folder + "/" + vocoder_filename + ".mp3")
-                sg.popup("File successfully saved to " + vocoder_save_folder)
+                shutil.move("vocoded.mp3", folder_select + "/" + filename + ".mp3")
+                sg.popup("File successfully saved to " + folder_select)
             else:
                 sg.popup("File already exists, delete file or try a different name.")
             os.remove("temp.wav")
@@ -212,7 +306,7 @@ while True:
             phaser_stages = int(values["-PHASER_STAGES-"])
             phaser_mix = values["-PHASER_MIX-"]
             phaser_wet_mix = values["-PHASER_WET_MIX-"]
-            phased = phaser_flanger(audio, sample_rate=sr, phaser_rate=phaser_rate, phaser_depth=phaser_depth, phaser_stages=phaser_stages, phaser_mix=phaser_mix, wet_mix=phaser_wet_mix, flanger_mix=0.0)
+            phased = phaser_flanger(audio, sr, phaser_rate=phaser_rate, phaser_depth=phaser_depth, phaser_stages=phaser_stages, phaser_mix=phaser_mix, wet_mix=phaser_wet_mix, flanger_mix=0.0)
             sf.write("temp.mp3", phased, sr)
             ps.playsound("temp.mp3")
             os.remove("temp.mp3")
@@ -221,24 +315,341 @@ while True:
             try:
                 os.remove("temp.mp3")
             except:
-                pass
-        
+                pass        
     elif event == "-PHASER_SAVE-":
         try:
-            phaser_save_folder = values["-PHASER_FOLDER_SELECT-"]
-            phaser_file_name = values["-PHASER_FILENAME-"]
+            folder_select = values["-PHASER_FOLDER_SELECT-"]
+            filename = values["-PHASER_FILENAME-"]
             phaser_rate = values["-PHASER_RATE-"]
             phaser_depth = values["-PHASER_DEPTH-"]
             phaser_stages = int(values["-PHASER_STAGES-"])
             phaser_mix = values["-PHASER_MIX-"]
-            phased = phaser_flanger(audio, sample_rate=sr, phaser_rate=phaser_rate, phaser_depth=phaser_depth, phaser_stages=phaser_stages, phaser_mix=phaser_mix, wet_mix=0.0, flanger_mix=0.0)
-            sf.write("phased.mp3", phased, sr)
-            shutil.move("phased.mp3", phaser_save_folder + "/" + phaser_file_name + ".mp3")
+            phased = phaser_flanger(audio, sr, phaser_rate=phaser_rate, phaser_depth=phaser_depth, phaser_stages=phaser_stages, phaser_mix=phaser_mix, wet_mix=0.0, flanger_mix=0.0)
+            if os.path.isfile(folder_select + "/" + filename + ".mp3") == False:
+                sf.write("phased.mp3", phased, sr)
+                shutil.move("phased.mp3", folder_select + "/" + filename + ".mp3")
+                sg.popup("File saved successfully to " + folder_select)
+            else:
+                sg.popup("File already exists, delete file or try a different name.")
         except:
             sg.popup("Error saving file.")
             try:
                 os.remove("phased.mpe3")
             except:
                 pass
+            
+    elif event == "-FLANGER_PREVIEW-":
+        try:
+            flanger_rate = values["-FLANGER_RATE-"]
+            flanger_delay_base = values["-FLANGER_DELAY_BASE-"]
+            flanger_delay_depth = values["-FLANGER_DELAY_DEPTH-"]
+            flanger_mix = values["-FLANGER_MIX-"]
+            flanged = phaser_flanger(audio, sr, flanger_rate=flanger_rate, flanger_delay_base=flanger_delay_base, flanger_delay_depth=flanger_delay_depth, flanger_mix=flanger_mix, phaser_mix=0.0)
+            sf.write("temp.mp3", flanged, sr)
+            ps.playsound("temp.mp3")
+            os.remove("temp.mp3")
+        except:
+            sg.popup("Error previewing sound.")
+            try:
+                os.remove("temp.mp3")
+            except:
+                pass
+    elif event == "-FLANGER_SAVE-":
+        try:
+            folder_select = values["-FLANGER_FOLDER_SELECT-"]
+            filename = values["-FLANGER_FILENAME-"]
+            flanger_rate = values["-FLANGER_RATE-"]
+            flanger_delay_base = values["-FLANGER_DELAY_BASE-"]
+            flanger_delay_depth = values["-FLANGER_DELAY_DEPTH-"]
+            flanger_mix = values["-FLANGER_MIX-"]
+            flanged = phaser_flanger(audio, sr, flanger_rate=flanger_rate, flanger_delay_base=flanger_delay_base, flanger_delay_depth=flanger_delay_depth, flanger_mix=flanger_mix, phaser_mix=0.0)
+            if os.path.isfile(folder_select + "/" + filename + ".mp3") == False:
+                sf.write("flanged.mp3", flanged, sr)
+                shutil.move("flanged.mp3", folder_select + "/" + filename + ".mp3")
+                sg.popup("File saved successfully to " + folder_select)
+            else:
+                sg.popup("File already exists, delete file or try a different name.")
+        except:
+            sg.popup("Error saving file.")
+            try:
+                os.remove("flanged.mp3")
+            except:
+                pass
+            
+    elif event == "-CHORUS_PREVIEW-":
+        try:
+            chorus_modulation_amount = values["-CHORUS_MODULATION_AMOUNT-"]
+            chorus_speed = values["-CHORUS_SPEED-"]
+            chorus_numberof_clones = int(values["-CHORUS_NUMBEROF_CLONES-"])
+            chorus_delay = values["-CHORUS_DELAY-"]
+            chorus_mix = values["-CHORUS_MIX-"]
+            chorused = chorus(audio, sr, mix=chorus_mix, amount=chorus_modulation_amount, speed=chorus_speed, n_clones=chorus_numberof_clones, delay=chorus_delay)
+            sf.write("temp.mp3", chorused, sr)
+            ps.playsound("temp.mp3")
+            os.remove("temp.mp3")
+        except:
+            sg.popup("Error previewing sound.")
+            try:
+                os.remove("temp.mp3")
+            except:
+                pass
+    elif event == "-CHORUS_SAVE-":
+        try:
+            folder_select = values["-CHORUS_FOLDER_SELECT-"]
+            filename = values["-CHORUS_FILENAME-"]
+            chorus_modulation_amount = values["-CHORUS_MODULATION_AMOUNT-"]
+            chorus_speed = values["-CHORUS_SPEED-"]
+            chorus_numberof_clones = int(values["-CHORUS_NUMBEROF_CLONES-"])
+            chorus_delay = values["-CHORUS_DELAY-"]
+            chorus_mix = values["-CHORUS_MIX-"]
+            chorused = chorus(audio, sr, mix=chorus_mix, amount=chorus_modulation_amount, speed=chorus_speed, n_clones=chorus_numberof_clones, delay=chorus_delay)
+            if os.path.isfile(folder_select + "/" + filename + ".mp3") == False:
+                sf.write("chorused.mp3", chorused, sr)
+                shutil.move("chorused.mp3", folder_select + "/" + filename + ".mp3")
+                sg.popup("File saved successfully to " + folder_select
+                         )
+            else:
+                sg.popup("File already exists, delete file or try a different name.")
+        except:
+            sg.popup("Error saving file.")
+            try:
+                os.remove("chorused.mp3")
+            except:
+                pass
+    
+    elif event == "-DELAY_PREVIEW_DIGITAL-":
+        try:
+            mode = values["-DELAY_MODE-"]
+            delay_time = values["-DELAY_TIME-"]
+            feedback = values["-DELAY_FEEDBACK-"]
+            mix = values["-DELAY_MIX_DIGITAL-"]
+            delayed = delay(audio, sr, delay_time=delay_time, feedback=feedback, mix=mix, mode=mode)
+            sf.write("temp.mp3", delayed, sr)
+            ps.playsound("temp.mp3")
+            os.remove("temp.mp3")
+        except:
+            sg.popup("Error previewing sound.")
+            try:
+                os.remove("temp.mp3")
+            except:
+                pass
+    elif event == "-DELAY_SAVE_DIGITAL-":
+        try:
+            folder_select = values["-DELAY_DIGITAL_FOLDER_SELECT-"]
+            filename = values["-DELAY_DIGITAL_FILENAME-"]
+            mode = values["-DELAY_MODE-"]
+            delay_time = values["-DELAY_TIME-"]
+            feedback = values["-DELAY_FEEDBACK-"]
+            mix = values["-DELAY_MIX_DIGITAL-"]
+            delayed = delay(audio, sr, delay_time=delay_time, feedback=feedback, mix=mix, mode=mode)
+            if os.path.isfile(folder_select + "/" + filename + ".mp3") == False:
+                sf.write("digital_delay.mp3", delayed, sr)
+                shutil.move("digital_delay.mp3", folder_select + "/" + filename + ".mp3")
+                sg.popup("File successfully saved to " + folder_select)
+            else:
+                sg.popup("File already exists, delete file or try a different name.")
+        except:
+            sg.popup("Error saving file.")
+            try:
+                os.remove("digital_delay.mp3")
+            except:
+                pass
+    elif event == "-DELAY_PREVIEW_ANALOG-":
+        try:
+            mode = values["-DELAY_MODE-"]
+            delay_time = values["-DELAY_TIME-"]
+            feedback = values["-DELAY_FEEDBACK-"]
+            lp_cutoff = values["-DELAY_LOWPASS_CUTOFF-"]
+            flutter_depth = values["-DELAY_FLUTTER_DEPTH-"]
+            pitch_drift_depth = values["-DELAY_PITCH_DRIFT_DEPTH-"]
+            drive = values["-DELAY_DRIVE-"]
+            mix = values["-DELAY_MIX_ANALOG-"]
+            delayed = delay(audio, sr, delay_time=delay_time, feedback=feedback, mix=mix, mode=mode, lp_cutoff=lp_cutoff, flutter_depth=flutter_depth, pitch_drift_depth=pitch_drift_depth)
+            sf.write("temp.mp3", delayed, sr)
+            ps.playsound("temp.mp3")
+            os.remove("temp.mp3")
+        except:
+            sg.popup("Error previewing sound.")
+            try:
+                os.remove("temp.mp3")
+            except:
+                pass
+    elif event == "-DELAY_SAVE_ANALOG-":
+        try:
+            folder_select = values["-DELAY_ANALOG_FOLDER_SELECT-"]
+            filename = values["-DELAY_ANALOG_FILENAME-"]
+            mode = values["-DELAY_MODE-"]
+            delay_time = values["-DELAY_TIME-"]
+            feedback = values["-DELAY_FEEDBACK-"]
+            lp_cutoff = values["-DELAY_LOWPASS_CUTOFF-"]
+            flutter_depth = values["-DELAY_FLUTTER_DEPTH-"]
+            pitch_drift_depth = values["-DELAY_PITCH_DRIFT_DEPTH-"]
+            drive = values["-DELAY_DRIVE-"]
+            mix = values["-DELAY_MIX_ANALOG-"]
+            delayed = delay(audio, sr, delay_time=delay_time, feedback=feedback, mix=mix, mode=mode, lp_cutoff=lp_cutoff, flutter_depth=flutter_depth, pitch_drift_depth=pitch_drift_depth)
+            sf.write("delayed.mp3", delayed, sr)
+            shutil.move("delayed.mp3", folder_select + "/" + filename + ".mp3")
+            sg.popup("File successfully saved to " + folder_select)
+        except:
+            sg.popup("Error saving file.")
+            try:
+                os.remove("delayed.mp3")
+            except:
+                pass
+        
+    elif event == "-GLITCH_PREVIEW-":
+        try:
+            n_segments = int(values["-GLITCH_NUMBER_OF_SEGMENTS-"])
+            intensity = values["-GLITCH_INTENSITY-"]
+            loop_length = values["-GLITCH_LOOP_LENGTH-"]
+            glitched = glitch(audio, sr, n_segments=n_segments, intensity=intensity, loop_length=loop_length)
+            sf.write("temp.mp3", glitched, sr)
+            ps.playsound("temp.mp3")
+            os.remove("temp.mp3")
+        except:
+            sg.popup("Error previewing sound.")
+            try:
+                os.remove("temp.mp3")
+            except:
+                pass
+    elif event == "-GLITCH_SAVE-":
+        try:
+            folder_select = values["-GLITCH_FOLDER_SELECT-"]
+            filename = values["-GLITCH_FILENAME-"]
+            n_segments = int(values["-GLITCH_NUMBER_OF_SEGMENTS-"])
+            intensity = values["-GLITCH_INTENSITY-"]
+            loop_length = values["-GLITCH_LOOP_LENGTH-"]
+            glitched = glitch(audio, sr, n_segments=n_segments, intensity=intensity, loop_length=loop_length)
+            sf.write("glitched.mp3", glitched, sr)
+            shutil.move("glitched.mp3", folder_select + "/" + filename + ".mp3")
+            sg.popup("File successfully saved to " + folder_select)
+        except:
+            sg.popup("Error saving sound.")
+            try:
+                os.remove("glitched.mp3")
+            except:
+                pass
+    
+    # Does not work with .Wav files, don't care enough to fix right now. Maybe in the future
+    # Error when crossover values are not ascending, could fix with dynamic bars but that sounds like a lot of work and I'm not doing that right now.
+    elif event == "-SATURATION_PREVIEW-":
+        number_of_crossovers = values["-SATURATION_NUMBER_OF_CROSSOVERS-"]
+        if number_of_crossovers == 1:
+            try:
+                crossovers = [int(values["-SATURATION_CROSSOVER_ONE-"])]
+                drives = [values["-SATURATION_DRIVE_ONE-"], values["-SATURATION_DRIVE_TWO-"]]
+                saturated = process_multi_band(audio, fs=sr, crossovers=crossovers, drives=drives)
+                sf.write("temp.mp3", saturated, sr)
+                ps.playsound("temp.mp3")
+                os.remove("temp.mp3")
+            except:
+                sg.popup("Error previewing sound.")
+                try:
+                    os.remove("temp.mp3")
+                except:
+                    pass
+        elif number_of_crossovers == 2:
+            try:
+                crossovers = [int(values["-SATURATION_CROSSOVER_ONE-"]), int(values["-SATURATION_CROSSOVER_TWO-"])]
+                drives = [values["-SATURATION_DRIVE_ONE-"], values["-SATURATION_DRIVE_TWO-"], values["-SATURATION_DRIVE_THREE-"]]
+                saturated = process_multi_band(audio, fs=sr, crossovers=crossovers, drives=drives)
+                sf.write("temp.mp3", saturated, sr)
+                ps.playsound("temp.mp3")
+                os.remove("temp.mp3")
+            except:
+                sg.popup("Error previewing sound.")
+                try:
+                    os.remove("temp.mp3")
+                except:
+                    pass
+        elif number_of_crossovers == 3:
+            try:
+                crossovers = [int(values["-SATURATION_CROSSOVER_ONE-"]), int(values["-SATURATION_CROSSOVER_TWO-"]), int(values["-SATURATION_CROSSOVER_THREE-"])]
+                drives = [values["-SATURATION_DRIVE_ONE-"], values["-SATURATION_DRIVE_TWO-"], values["-SATURATION_DRIVE_THREE-"], values["-SATURATION_DRIVE_FOUR-"]]
+                saturated = process_multi_band(audio, fs=sr, crossovers=crossovers, drives=drives)
+                sf.write("temp.mp3", saturated, sr)
+                ps.playsound("temp.mp3")
+                os.remove("temp.mp3")
+            except:
+                sg.popup("Error previewing sound.")
+                try:
+                    os.remove("temp.mp3")
+                except:
+                    pass
+        elif number_of_crossovers == 4:
+            try:
+                crossovers = [int(values["-SATURATION_CROSSOVER_ONE-"]), int(values["-SATURATION_CROSSOVER_TWO-"]), int(values["-SATURATION_CROSSOVER_THREE-"]), int(values["-SATURATION_CROSSOVER_FOUR-"])]
+                drives = [values["-SATURATION_DRIVE_ONE-"], values["-SATURATION_DRIVE_TWO-"], values["-SATURATION_DRIVE_THREE-"], values["-SATURATION_DRIVE_FOUR-"], values["-SATURATION_DRIVE_FIVE-"]]
+                saturated = process_multi_band(audio, fs=sr, crossovers=crossovers, drives=drives)
+                sf.write("temp.mp3", saturated, sr)
+                ps.playsound("temp.mp3")
+                os.remove("temp.mp3")
+            except:
+                sg.popup("Error previewing sound.")
+                try:
+                    os.remove("temp.mp3")
+                except:
+                    pass
+    elif event == "-SATURATION_SAVE-":
+        number_of_crossovers = values["-SATURATION_NUMBER_OF_CROSSOVERS-"]
+        folder_select = values["-SATURATION_FOLDER_SELECT-"]
+        filename = values["-SATURATION_FILENAME-"]
+        if number_of_crossovers == 1:
+            try:
+                crossovers = [int(values["-SATURATION_CROSSOVER_ONE-"])]
+                drives = [values["-SATURATION_DRIVE_ONE-"], values["-SATURATION_DRIVE_TWO-"]]
+                saturated = process_multi_band(audio, fs=sr, crossovers=crossovers, drives=drives)
+                sf.write("saturated.mp3", saturated, sr)
+                shutil.move("saturated.mp3", folder_select + "/" + filename + ".mp3")
+                sg.popup("File saved successfuly to " + folder_select)
+            except:
+                sg.popup("Error saving sound.")
+                try:
+                    os.remove("saturated.mp3")
+                except:
+                    pass
+        elif number_of_crossovers == 2:
+            try:
+                crossovers = [int(values["-SATURATION_CROSSOVER_ONE-"]), int(values["-SATURATION_CROSSOVER_TWO-"])]
+                drives = [values["-SATURATION_DRIVE_ONE-"], values["-SATURATION_DRIVE_TWO-"], values["-SATURATION_DRIVE_THREE-"]]
+                saturated = process_multi_band(audio, fs=sr, crossovers=crossovers, drives=drives)
+                sf.write("saturated.mp3", saturated, sr)
+                shutil.move("saturated.mp3", folder_select + "/" + filename + ".mp3")
+                sg.popup("File saved successfully to " + folder_select)
+            except:
+                sg.popup("Error saving sound.")
+                try:
+                    os.remove("saturated.mp3")
+                except:
+                    pass
+        elif number_of_crossovers == 3:
+            try:
+                crossovers = [int(values["-SATURATION_CROSSOVER_ONE-"]), int(values["-SATURATION_CROSSOVER_TWO-"]), int(values["-SATURATION_CROSSOVER_THREE-"])]
+                drives = [values["-SATURATION_DRIVE_ONE-"], values["-SATURATION_DRIVE_TWO-"], values["-SATURATION_DRIVE_THREE-"], values["-SATURATION_DRIVE_FOUR-"]]
+                saturated = process_multi_band(audio, fs=sr, crossovers=crossovers, drives=drives)
+                sf.write("saturated.mp3", saturated, sr)
+                shutil.move("saturated.mp3", folder_select + "/" + filename + ".mp3")
+                sg.popup("File saved successfully to " + folder_select)
+            except:
+                sg.popup("Error saving sound.")
+                try:
+                    os.remove("saturated.mp3")
+                except:
+                    pass
+        elif number_of_crossovers == 4:
+            try:
+                crossovers = [int(values["-SATURATION_CROSSOVER_ONE-"]), int(values["-SATURATION_CROSSOVER_TWO-"]), int(values["-SATURATION_CROSSOVER_THREE-"]), int(values["-SATURATION_CROSSOVER_FOUR-"])]
+                drives = [values["-SATURATION_DRIVE_ONE-"], values["-SATURATION_DRIVE_TWO-"], values["-SATURATION_DRIVE_THREE-"], values["-SATURATION_DRIVE_FOUR-"], values["-SATURATION_DRIVE_FIVE-"]]
+                saturated = process_multi_band(audio, fs=sr, crossovers=crossovers, drives=drives)
+                sf.write("saturated.mp3", saturated, sr)
+                shutil.move("saturated.mp3", folder_select + "/" + filename + ".mp3")
+                sg.popup("File saved successfully to " + folder_select)
+            except:
+                sg.popup("Error saving sound.")
+                try:
+                    os.remove("saturated.mp3")
+                except:
+                    pass
+        
 
 window.close()
